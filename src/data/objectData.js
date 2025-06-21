@@ -22,7 +22,7 @@ const objectData = {
     
   ],
   Architecture: [
-    { name: "Wall", image: "assets/images/Architecture/pm_wall.png" , model: "assets/models/Architecture/pm_wall.glb"},
+    { name: "Wall", image: "/assets/images/Architecture/pm_wall.png" , model: "assets/models/Architecture/pm_wall.glb"},
     { name: "Wood Pillar", image: "assets/images/Architecture/wood_pillar.png", model: "assets/models/Architecture/wood_pillar.glb" },
     { name: "Wooden Door", image: "assets/images/Architecture/wooden_door.png", model: "assets/models/Architecture/wooden_door.glb" },
   ],
