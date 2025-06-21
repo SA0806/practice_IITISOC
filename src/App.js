@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import ARView from './pages/ARView';
 
+// function App() {
+//   const [page, setPage] = useState("dashboard");
+
+//   const navigateToAR = () => setPage("ar");
+//   const navigateToDashboard = () => setPage("dashboard");
+
+//   return (
+//     <>
+//       {page === "dashboard" && <Dashboard navigateToAR={navigateToAR} />}
+//       {page === "ar" && <ARView goBack={navigateToDashboard} />}
+//     </>
+//   );
+// }
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/ARView" element={<ARView />} />
+      </Routes>
+   
   );
 }
 

@@ -1,0 +1,118 @@
+/* src/pages/Dashboard.css */
+.dashboard {
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.section-title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.dashboard-content {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 40px;
+}
+
+.category-panel,
+.objects-panel {
+  background: #e0e0e0;
+  padding: 20px;
+  border-radius: 12px;
+  width: 280px;
+}
+
+.category-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  font-weight: bold;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.category-btn:hover {
+  background: #555;
+}
+
+.objects-panel h3,
+.category-panel h3 {
+  background: yellow;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.object-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.object-card {
+  background: #17a2b8;
+  color: white;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+/* .ar-button {
+  padding: 14px 30px;
+  background: goldenrod;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  
+}
+
+.ar-button:hover {
+  background: darkorange;
+} */
+.selection-preview {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.selection-preview h3 {
+  /* margin-bottom: 15px; */
+  font-weight: 600;
+}
+
+.selection-preview .object-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+
+
+
+
+/* Ensure space is available for bottom bar */
+.dashboard {
+  padding-bottom: 160px;
+}
+

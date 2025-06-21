@@ -1,0 +1,37 @@
+/* .selected-bar {
+  position: fixed;
+  top: 2%;
+  bottom: 3%;
+  left: 2%;
+  right: 2%;
+  width: 96%;
+  max-height: 300px;
+  z-index: 1050; 
+  
+} */
+ .selected-bar {
+  padding: 20px;
+  margin-top: 30px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 96%;
+  max-height: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: visible;
+ 
+}
+
+
+.selected-items-container {
+  display: flex;
+  flex-wrap: wrap; /* allow multiple rows if needed */
+  gap: 12px;
+  flex-direction: row;
+  gap: 10px;
+  max-height: 180px;
+  overflow-y: auto;
+ 
+  
+}
