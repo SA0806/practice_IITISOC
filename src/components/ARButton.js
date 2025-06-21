@@ -5,9 +5,14 @@ import { useNavigate } from 'react-router-dom';
 const ARButton = ({ selectedObjects }) => {
   const navigate = useNavigate();
 
+  console.log("Final selectedObjects to pass:", selectedObjects);
+
+
   const handleClick = () => {
     navigate('ARView', {
-      state: { models: selectedObjects.map(obj => obj.model) }
+      // state: { models: selectedObjects.map(obj => obj.model) }
+      state: { selectedObjects }  // send full objects, not just model URLs
+
     });
   };
 

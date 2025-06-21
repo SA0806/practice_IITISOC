@@ -142,7 +142,7 @@ Promise.all(
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
     if (reticle.visible && models.length > 0) {
-          loadedModels.forEach((m) => {
+          models.forEach((m) => {
             const clone = m.clone();
             clone.position.setFromMatrixPosition(reticle.matrix);
             clone.quaternion.setFromRotationMatrix(reticle.matrix);
