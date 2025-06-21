@@ -24,8 +24,13 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const ARView =() => {
+
+  const { state } = useLocation();
+  const selectedObjects = state?.selectedObjects || [];
+
   useEffect(() => {
     let camera, scene, renderer, controller;
     let reticle;
@@ -58,11 +63,23 @@ const ARView =() => {
       scene.add(light);
 
       // Load your 3D model
-      const loader = new GLTFLoader();
-      loader.load(process.env.PUBLIC_URL + '/model.glb', (gltf) => {
-      model = gltf.scene;
-      model.scale.set(0.6, 0.6, 0.6);
-     });
+    //   const loader = new GLTFLoader();
+    //   loader.load(process.env.PUBLIC_URL + '/model.glb', (gltf) => {
+    //   model = gltf.scene;
+    //   model.scale.set(0.6, 0.6, 0.6);
+    //  });
+
+    const loader = new GLTFLoader();
+const models = [];
+
+selectedObjects.forEach((object) => {
+  loader.load(object.model, (gltf) => {
+    const objModel = gltf.scene;
+    objModel.scale.set(0.6, 0.6, 0.6); // or custom per model
+    models.push(objModel);
+  });
+});
+
 
 
 
@@ -75,13 +92,16 @@ const ARView =() => {
 
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
-        if (reticle.visible && model) {
-          const clone = model.clone();
-          clone.position.setFromMatrixPosition(reticle.matrix);
-          clone.quaternion.setFromRotationMatrix(reticle.matrix);
-          scene.add(clone);
-        }
-      });
+  if (reticle.visible && models.length > 0) {
+    models.forEach((m) => {
+      const clone = m.clone();
+      clone.position.setFromMatrixPosition(reticle.matrix);
+      clone.quaternion.setFromRotationMatrix(reticle.matrix);
+      scene.add(clone);
+    });
+  }
+});
+
       scene.add(controller);
 
       renderer.xr.addEventListener('sessionstart', async () => {
