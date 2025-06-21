@@ -34,12 +34,12 @@ const ARView =() => {
   useEffect(() => {
     let camera, scene, renderer, controller;
     let reticle;
-    let model;
+    let loadedModels = [];
 
     init();
     animate();
 
-    function init() {
+    async function init() {
       const container = document.createElement('div');
       document.body.appendChild(container);
 
@@ -69,16 +69,37 @@ const ARView =() => {
     //   model.scale.set(0.6, 0.6, 0.6);
     //  });
 
-    const loader = new GLTFLoader();
-const models = [];
+//     const loader = new GLTFLoader();
+// const models = [];
 
-selectedObjects.forEach((object) => {
-  loader.load(object.model, (gltf) => {
-    const objModel = gltf.scene;
-    objModel.scale.set(0.6, 0.6, 0.6); // or custom per model
-    models.push(objModel);
-  });
-});
+// selectedObjects.forEach((object) => {
+//   loader.load(object.model, (gltf) => {
+//     const objModel = gltf.scene;
+//     objModel.scale.set(0.6, 0.6, 0.6); // or custom per model
+//     models.push(objModel);
+//   });
+// });
+      
+
+await Promise.all(
+        selectedObjects.map((object) => {
+          return new Promise((resolve, reject) => {
+            const loader = new GLTFLoader();
+            loader.load(
+              object.model,
+              (gltf) => {
+                const objModel = gltf.scene;
+                objModel.name = object.name; // optional for identification
+                objModel.scale.set(0.6, 0.6, 0.6); // Adjust scale as needed
+                loadedModels.push(objModel);
+                resolve();
+              },
+              undefined,
+              reject
+            );
+          });
+        })
+      );
 
 
 
@@ -92,16 +113,15 @@ selectedObjects.forEach((object) => {
 
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
-  if (reticle.visible && models.length > 0) {
-    models.forEach((m) => {
-      const clone = m.clone();
-      clone.position.setFromMatrixPosition(reticle.matrix);
-      clone.quaternion.setFromRotationMatrix(reticle.matrix);
-      scene.add(clone);
-    });
-  }
-});
-
+    if (reticle.visible && loadedModels.length > 0) {
+          loadedModels.forEach((m) => {
+            const clone = m.clone();
+            clone.position.setFromMatrixPosition(reticle.matrix);
+            clone.quaternion.setFromRotationMatrix(reticle.matrix);
+            scene.add(clone);
+          });
+        }
+      });
       scene.add(controller);
 
       renderer.xr.addEventListener('sessionstart', async () => {
