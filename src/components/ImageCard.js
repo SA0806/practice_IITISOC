@@ -12,7 +12,12 @@ const ImageCard = ({ name, image, onClick, selected }) => {
         onClick();
       }}
     >
-      <img src={image} alt={name} className="card-img" />
+      <img src={image} alt={name} className="card-img" 
+      onError={(e) => {
+    console.error("❌ Image failed to load:", image);
+    e.target.style.display = 'none'; // or set fallback image
+  }}
+   />
       <div className="card-body">
         <p className="card-text">{name}</p>
       </div>
