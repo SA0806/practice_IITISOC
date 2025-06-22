@@ -18,7 +18,7 @@ body{
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   border: none !important;
   cursor: not-allowed !important;
-  z-index: 1000 !important;
+  z-index: 10000 !important;
 }
 /* .loading-message {
   position: absolute;
