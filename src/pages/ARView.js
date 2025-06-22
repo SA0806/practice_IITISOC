@@ -205,16 +205,15 @@ Promise.all(
 
   // ✅ Loading message shown until reticle appears
     return (
-    <>
-      <div className="ar-overlay">
-        {!isSurfaceFound && (
-          <div className="loading-message">
-            Move your device around to detect a surface...
-          </div>
-        )}
+  <div className="ar-container">
+    {!isSurfaceFound && (
+      <div className="loading-message">
+        Move your device around to detect a surface...
       </div>
-    </>
-  );
+    )}
+  </div>
+);
+
 
 }
 
