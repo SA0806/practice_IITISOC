@@ -30,7 +30,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
     </h2>
     <div
       id="collapseOne"
-      className="accordion-collapse collapse show"
+      className="accordion-collapse collapse"
       data-bs-parent="#accordionExample"
     >
       {/* <div className="accordion-body">
