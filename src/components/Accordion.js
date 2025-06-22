@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageCard from './ImageCard'; 
-import objectData from '../data/ObjectData'; 
+import objectData from '../data/objectData'; 
 import { useState } from 'react';
 
 const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
