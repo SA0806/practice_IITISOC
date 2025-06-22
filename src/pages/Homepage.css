@@ -1,0 +1,128 @@
+.Homepage {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  max-height: 100vw;
+  max-width: 100vw;
+}
+
+.Homepage__heading {
+  color: white;
+  font-family: 'Lucida Sans', sans-serif;
+  font-size: 80px;
+  text-align: center;
+  text-transform: capitalize;
+  background-image: url("https://static.vecteezy.com/system/resources/previews/003/788/560/non_2x/old-wood-texture-landscape-eps10-wide-background-illustration-free-vector.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  padding: 15px;
+  margin: 0;
+}
+
+.Homepage__nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 10px;
+  gap: 10px;
+  margin: 0;
+}
+
+.Homepage__nav-item {
+  font-family: 'Trebuchet MS', sans-serif;
+  color: black;
+}
+
+.Homepage__nav-item:hover {
+  cursor: pointer;
+  color: red;
+  text-decoration: underline;
+  transition: 0.5s;
+  transform: scale(1.1);
+}
+
+.Homepage__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px;
+  background-image: url("https://img.freepik.com/free-photo/solid-gypsum-wall-textured-backdrop_53876-124403.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  flex-wrap: wrap;
+  min-height: calc(100vh - 126px);
+  
+}
+
+.Homepage__image {
+  width: 500px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.Homepage__text {
+  max-width: 800px;
+  font-size: 25px;
+  font-family: cursive;
+  color: white;
+}
+
+.Homepage__subheading {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 60px;
+
+}
+.Homepage_description{
+    padding: 10px;
+}
+
+.Homepage__button {
+  border: 1px solid white;
+  border-radius: 15px;
+  background-color: bisque;
+  color: black;
+  margin: 5px 20px;
+  font-size: 20px;
+  padding: 10px 20px;
+  font-family: 'Lucida Sans', sans-serif;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.Homepage__button:hover {
+  background-color: lightskyblue;
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .Homepage__container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .Homepage__image {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .Homepage__text {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .Homepage__heading {
+    font-size: 40px;
+  }
+
+  .Homepage__subheading {
+    font-size: 32px;
+  }
+
+  .Homepage__button {
+    font-size: 18px;
+  }
+}
