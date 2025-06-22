@@ -3,3 +3,22 @@ body{
   width: 100vw;
   
 }
+
+ .custom-ar-button {
+  background-color: #ffe6e6 !important;
+  color: #cc0000 !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  padding: 14px 28px !important;
+  border-radius: 12px !important;
+  position: fixed !important;
+  bottom: 30px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+  cursor: not-allowed !important;
+  z-index: 1000 !important;
+}
+
+

@@ -62,7 +62,12 @@ const ARView =() => {
       renderer.xr.enabled = true;
       container.appendChild(renderer.domElement);
 
-      document.body.appendChild(ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] }));
+      // document.body.appendChild(ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] }));
+
+      const arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
+arButton.classList.add('custom-ar-button'); // Add your own CSS class
+document.body.appendChild(arButton);
+
 
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
