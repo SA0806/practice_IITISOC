@@ -20,5 +20,16 @@ body{
   cursor: not-allowed !important;
   z-index: 1000 !important;
 }
+.loading-message {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  z-index: 9999;
+}
 
 
