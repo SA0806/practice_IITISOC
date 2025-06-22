@@ -19,7 +19,7 @@
 
 
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton';
@@ -32,13 +32,15 @@ const ARView =() => {
   const { state } = useLocation();
   const selectedObjects = state?.selectedObjects || [];
 
+  const [isSurfaceFound, setSurfaceFound] = useState(false); 
+
   console.log("🔍 Models passed to ARView:", selectedObjects);
 
 
   useEffect(() => {
     let camera, scene, renderer, controller;
     let reticle;
-    let loadedModels = [];
+   
     const loader = new GLTFLoader(); 
 
     init();
@@ -173,9 +175,11 @@ Promise.all(
               const hit = hitTestResults[0];
               const pose = hit.getPose(referenceSpace);
               reticle.visible = true;
+              setSurfaceFound(true); // ✅ Update loading state
               reticle.matrix.fromArray(pose.transform.matrix);
             } else {
               reticle.visible = false;
+              setSurfaceFound(false); // Hide again if lost
             }
           }
 
@@ -199,7 +203,16 @@ Promise.all(
     }
   }, []);
 
-  return null;
+  // ✅ Loading message shown until reticle appears
+  return (
+    <>
+      {!isSurfaceFound && (
+        <div className="loading-message">
+          Move your device around to detect a surface...
+        </div>
+      )}
+    </>
+  );
 }
 
 export default ARView;
