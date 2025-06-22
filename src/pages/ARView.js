@@ -19,7 +19,7 @@
 
 
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton';
@@ -33,7 +33,6 @@ const ARView =() => {
   const selectedObjects = state?.selectedObjects || [];
 
   const [isSurfaceFound, setSurfaceFound] = useState(false); 
-  const containerRef = useRef(null);
 
   console.log("🔍 Models passed to ARView:", selectedObjects);
 
@@ -44,22 +43,12 @@ const ARView =() => {
    
     const loader = new GLTFLoader(); 
 
-    // ✅ Ensure DOM is mounted first
-  if (!containerRef.current) return;
-
     init();
-
-    const container = containerRef.current;
-    
+    animate();
 
     async function init() {
-      // const container = document.createElement('div');
-      // document.body.appendChild(container);
-
-      
-      
-
-
+      const container = document.createElement('div');
+      document.body.appendChild(container);
 
       scene = new THREE.Scene();
 
@@ -78,8 +67,8 @@ const ARView =() => {
       // document.body.appendChild(ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] }));
 
       const arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
-     arButton.classList.add('custom-ar-button'); // Add your own CSS class
-       container.appendChild(arButton);
+arButton.classList.add('custom-ar-button'); // Add your own CSS class
+document.body.appendChild(arButton);
 
 
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
@@ -128,7 +117,7 @@ const ARView =() => {
 
       let models = [];
 
-models= await Promise.all(
+Promise.all(
   selectedObjects.map((object) =>
     new Promise((resolve, reject) => {
       loader.load(
@@ -206,19 +195,17 @@ models= await Promise.all(
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
-    init();
 
-    // function animate() {
-    //   renderer.setAnimationLoop(() => {
-    //     renderer.render(scene, camera);
-    //   });
-    // }
-  }, [selectedObjects]); // ✅ Include dependency
+    function animate() {
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
+    }
+  }, []);
 
   // ✅ Loading message shown until reticle appears
     return (
-  <div className="ar-root">
-    <div className="ar-container" ref={containerRef}></div>
+  <div className="ar-container">
     {!isSurfaceFound && (
       <div className="loading-message">
         Move your device around to detect a surface...
