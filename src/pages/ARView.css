@@ -20,7 +20,7 @@ body{
   cursor: not-allowed !important;
   z-index: 1000 !important;
 }
-.loading-message {
+/* .loading-message {
   position: absolute;
   top: 20px;
   width: 100%;
@@ -30,6 +30,26 @@ body{
   background: rgba(0, 0, 0, 0.5);
   padding: 10px;
   z-index: 9999;
+} */
+.ar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* allows interaction with WebXR canvas */
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
-
+.loading-message {
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
 

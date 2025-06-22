@@ -141,7 +141,7 @@ Promise.all(
 
 
       const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
-      const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.7, transparent: true,});
       reticle = new THREE.Mesh(geometry, material);
       reticle.matrixAutoUpdate = false;
       reticle.visible = false;
@@ -204,15 +204,18 @@ Promise.all(
   }, []);
 
   // ✅ Loading message shown until reticle appears
-  return (
+    return (
     <>
-      {!isSurfaceFound && (
-        <div className="loading-message">
-          Move your device around to detect a surface...
-        </div>
-      )}
+      <div className="ar-overlay">
+        {!isSurfaceFound && (
+          <div className="loading-message">
+            Move your device around to detect a surface...
+          </div>
+        )}
+      </div>
     </>
   );
+
 }
 
 export default ARView;
