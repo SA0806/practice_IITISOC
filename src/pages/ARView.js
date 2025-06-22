@@ -44,6 +44,9 @@ const ARView =() => {
    
     const loader = new GLTFLoader(); 
 
+    // ✅ Ensure DOM is mounted first
+  if (!containerRef.current) return;
+
     init();
     animate();
 
@@ -207,7 +210,7 @@ Promise.all(
         renderer.render(scene, camera);
       });
     }
-  }, []);
+  }, [selectedObjects]); // ✅ Include dependency
 
   // ✅ Loading message shown until reticle appears
     return (
