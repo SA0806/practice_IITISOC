@@ -25,6 +25,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import './ARView.css';
 
 const ARView =() => {
 
