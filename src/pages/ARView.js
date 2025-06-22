@@ -48,14 +48,16 @@ const ARView =() => {
   if (!containerRef.current) return;
 
     init();
-    animate();
+
+    const container = containerRef.current;
+    
 
     async function init() {
       // const container = document.createElement('div');
       // document.body.appendChild(container);
 
       
-      const container = containerRef.current;
+      
 
 
 
@@ -126,7 +128,7 @@ const ARView =() => {
 
       let models = [];
 
-Promise.all(
+models= await Promise.all(
   selectedObjects.map((object) =>
     new Promise((resolve, reject) => {
       loader.load(
@@ -204,12 +206,13 @@ Promise.all(
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
+    init();
 
-    function animate() {
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
-    }
+    // function animate() {
+    //   renderer.setAnimationLoop(() => {
+    //     renderer.render(scene, camera);
+    //   });
+    // }
   }, [selectedObjects]); // ✅ Include dependency
 
   // ✅ Loading message shown until reticle appears
