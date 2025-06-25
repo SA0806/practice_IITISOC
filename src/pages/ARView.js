@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton';
@@ -8,10 +8,11 @@ import './ARView.css';
 const ARView = () => {
   const { state } = useLocation();
   const selectedObjects = state?.selectedObjects || [];
+  const mountRef = useRef(null);
   const [isSurfaceFound, setSurfaceFound] = useState(false);
 
   useEffect(() => {
-    let camera, scene, renderer, controller, container, reticle;
+    let camera, scene, renderer, controller, reticle;
     const loader = new GLTFLoader();
     let arButton;
 
@@ -19,21 +20,21 @@ const ARView = () => {
     animate();
 
     async function init() {
-      container = document.createElement('div');
-      document.body.appendChild(container);
+      const container = mountRef.current;
+      if (!container) return;
 
       scene = new THREE.Scene();
 
-      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+      camera = new THREE.PerspectiveCamera(70, container.clientWidth / container.clientHeight, 0.01, 20);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.xr.enabled = true;
       container.appendChild(renderer.domElement);
 
       arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
-      arButton.classList.add('custom-ar-button');
-      document.body.appendChild(arButton);
+      arButton.style.display = 'none'; // Hide default ARButton
+      // You can add your own custom AR start button if needed
 
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
@@ -57,7 +58,7 @@ const ARView = () => {
         )
       );
 
-      // Reticle setup
+      // Reticle
       const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
       const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.7, transparent: true });
       reticle = new THREE.Mesh(geometry, material);
@@ -65,7 +66,6 @@ const ARView = () => {
       reticle.visible = false;
       scene.add(reticle);
 
-      // Tap to place models
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
         if (reticle.visible && models.length > 0) {
@@ -79,7 +79,6 @@ const ARView = () => {
       });
       scene.add(controller);
 
-      // Hit test & reticle logic
       renderer.xr.addEventListener('sessionstart', async () => {
         const session = renderer.xr.getSession();
         const viewerReferenceSpace = await session.requestReferenceSpace('viewer');
@@ -107,34 +106,59 @@ const ARView = () => {
       });
 
       window.addEventListener('resize', onWindowResize);
-    }
 
-    function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      function onWindowResize() {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      }
     }
 
     function animate() {
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
+      if (renderer) {
+        renderer.setAnimationLoop(() => {
+          renderer.render(scene, camera);
+        });
+      }
     }
 
-    // 🔴 Cleanup: Remove canvas and AR button
     return () => {
       if (renderer && renderer.domElement) {
         renderer.setAnimationLoop(null);
         renderer.dispose();
       }
-      if (container) document.body.removeChild(container);
-      if (arButton) document.body.removeChild(arButton);
-      window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener('resize', () => {});
+      if (mountRef.current && mountRef.current.firstChild) {
+        mountRef.current.removeChild(mountRef.current.firstChild);
+      }
     };
   }, [selectedObjects]);
 
   return (
     <div className="ar-container">
+      {/* Top Selected Objects Bar */}
+      <div className="top-bar">
+        <p>Selected Objects</p>
+        <div className="selected-items">
+          {selectedObjects.map((obj, i) => (
+            <div className="thumbnail" key={i}>
+              <img src={obj.thumbnail || '/placeholder.png'} alt={`Object ${i}`} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Camera Screen */}
+      <div className="camera-screen" ref={mountRef}></div>
+
+      {/* Bottom Controls */}
+      <div className="bottom-controls">
+        <button>Rotate</button>
+        <button>Capture</button>
+        <button>Drag</button>
+      </div>
+
       {!isSurfaceFound && (
         <div className="loading-message">
           Move your device around to detect a surface...
