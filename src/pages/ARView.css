@@ -1,5 +1,4 @@
-/* Container holds everything */
-.ar-container {
+/* .ar-container {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -7,7 +6,6 @@
   background-color: #f9f9f9;
 }
 
-/* Top bar showing selected objects */
 .top-bar {
   background: #ffffff;
   padding: 8px 16px;
@@ -29,7 +27,6 @@
   border: 1px solid #ccc;
 }
 
-/* Camera area for AR view */
 .camera-screen {
   flex: 1;
   position: relative;
@@ -38,7 +35,6 @@
   background-color: black;
 }
 
-/* Make sure canvas covers full camera area */
 .camera-screen canvas {
   position: absolute !important;
   width: 100% !important;
@@ -47,7 +43,6 @@
   left: 0;
 }
 
-/* Optional bottom buttons (can be enhanced later) */
 .bottom-controls {
   background: #f1f1f1;
   padding: 10px 16px;
@@ -56,7 +51,7 @@
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Overlay that appears before AR starts */
+
 .start-ar-overlay {
   position: fixed;
   top: 0;
@@ -70,7 +65,7 @@
   z-index: 10000;
 }
 
-/* Unified AR Start Button */
+
 .custom-start-ar,
 .start-ar-overlay button {
   font-size: 18px;
@@ -90,7 +85,7 @@
   transform: scale(1.05);
 }
 
-/* "Move device..." instruction */
+
 .loading-message {
   position: fixed;
   bottom: 70px;
@@ -102,4 +97,88 @@
   border-radius: 8px;
   font-size: 14px;
   z-index: 9999;
+} */
+
+
+.ar-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: black; /* prevent white screen */
+}
+
+/* Fullscreen WebXR canvas area */
+.camera-screen canvas {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1;
+}
+
+/* Top bar above the canvas */
+.top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10px 16px;
+  z-index: 10;
+}
+
+.selected-items {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.thumbnail img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Overlay before AR session starts */
+.start-ar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.start-ar-overlay button {
+  font-size: 18px;
+  padding: 16px 32px;
+  background: #00b894;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* Message below AR canvas */
+.loading-message {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 15;
 }

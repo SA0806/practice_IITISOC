@@ -17,15 +17,15 @@ const ARView = () => {
     let arButton;
 
     init();
-    animate();
 
     async function init() {
+      // Container for full-screen canvas
       container = document.createElement('div');
       container.className = 'three-container';
       document.body.appendChild(container);
 
+      // Scene setup
       scene = new THREE.Scene();
-
       camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -33,30 +33,31 @@ const ARView = () => {
       renderer.xr.enabled = true;
       container.appendChild(renderer.domElement);
 
-      // AR Button
+      // Create and hide default AR button
       arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
-      arButton.style.display = 'none'; // Hide default
+      arButton.style.display = 'none';
       document.body.appendChild(arButton);
-      setArButtonRef(arButton); // Save for triggering via custom button
+      setArButtonRef(arButton);
 
+      // Lighting
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
 
+      // Load models
       const models = await Promise.all(
-        selectedObjects.map(
-          (object) =>
-            new Promise((resolve, reject) => {
-              loader.load(
-                object.model,
-                (gltf) => {
-                  const model = gltf.scene;
-                  model.scale.set(0.6, 0.6, 0.6);
-                  resolve(model);
-                },
-                undefined,
-                reject
-              );
-            })
+        selectedObjects.map(object =>
+          new Promise((resolve, reject) => {
+            loader.load(
+              object.model,
+              gltf => {
+                const model = gltf.scene;
+                model.scale.set(0.6, 0.6, 0.6);
+                resolve(model);
+              },
+              undefined,
+              reject
+            );
+          })
         )
       );
 
@@ -68,12 +69,12 @@ const ARView = () => {
       reticle.visible = false;
       scene.add(reticle);
 
-      // Controller
+      // Tap to place model
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
         if (reticle.visible && models.length > 0) {
-          models.forEach((m) => {
-            const clone = m.clone();
+          models.forEach(model => {
+            const clone = model.clone();
             clone.position.setFromMatrixPosition(reticle.matrix);
             clone.quaternion.setFromRotationMatrix(reticle.matrix);
             scene.add(clone);
@@ -82,30 +83,35 @@ const ARView = () => {
       });
       scene.add(controller);
 
+      // Hit test setup
       renderer.xr.addEventListener('sessionstart', async () => {
         const session = renderer.xr.getSession();
-        const viewerRefSpace = await session.requestReferenceSpace('viewer');
-        const hitTestSource = await session.requestHitTestSource({ space: viewerRefSpace });
 
-        renderer.setAnimationLoop((timestamp, frame) => {
-          if (frame) {
-            const referenceSpace = renderer.xr.getReferenceSpace();
-            const hitTestResults = frame.getHitTestResults(hitTestSource);
+        try {
+          const viewerSpace = await session.requestReferenceSpace('viewer');
+          const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
 
-            if (hitTestResults.length > 0) {
-              const hit = hitTestResults[0];
-              const pose = hit.getPose(referenceSpace);
-              reticle.visible = true;
-              setSurfaceFound(true);
-              reticle.matrix.fromArray(pose.transform.matrix);
-            } else {
-              reticle.visible = false;
-              setSurfaceFound(false);
+          renderer.setAnimationLoop((timestamp, frame) => {
+            if (frame) {
+              const referenceSpace = renderer.xr.getReferenceSpace();
+              const hits = frame.getHitTestResults(hitTestSource);
+
+              if (hits.length > 0) {
+                const hit = hits[0];
+                const pose = hit.getPose(referenceSpace);
+                reticle.visible = true;
+                setSurfaceFound(true);
+                reticle.matrix.fromArray(pose.transform.matrix);
+              } else {
+                reticle.visible = false;
+                setSurfaceFound(false);
+              }
             }
-          }
-
-          renderer.render(scene, camera);
-        });
+            renderer.render(scene, camera);
+          });
+        } catch (err) {
+          console.error('Hit test setup failed:', err);
+        }
       });
 
       window.addEventListener('resize', onWindowResize);
@@ -117,14 +123,8 @@ const ARView = () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    function animate() {
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
-    }
-
     return () => {
-      if (renderer && renderer.domElement) {
+      if (renderer) {
         renderer.setAnimationLoop(null);
         renderer.dispose();
       }
@@ -136,33 +136,28 @@ const ARView = () => {
 
   return (
     <div className="ar-container">
-      {/* Top Bar */}
+      {/* Top bar */}
       <div className="top-bar">
         <p>Selected Objects</p>
         <div className="selected-items">
           {selectedObjects.map((obj, i) => (
             <div className="thumbnail" key={i}>
-              <img src={obj.thumbnail || '/placeholder.png'} alt={`Object ${i}`} />
+              <img src={obj.thumbnail ?? 'https://via.placeholder.com/40'} alt={`Object ${i}`} />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Surface Detection Message */}
+      {/* Status and start */}
       {!isSurfaceFound && (
-        <div className="loading-message">
-          Move your device around to detect a surface...
-        </div>
-      )}
-
-      {/* Custom Start AR Button */}
-      {!isSurfaceFound && arButtonRef && (
-        <button
-          className="custom-start-ar"
-          onClick={() => arButtonRef.click()}
-        >
-          Start AR
-        </button>
+        <>
+          <div className="loading-message">Move your device around to detect a surface...</div>
+          {arButtonRef && (
+            <button className="custom-start-ar" onClick={() => arButtonRef.click()}>
+              Start AR
+            </button>
+          )}
+        </>
       )}
     </div>
   );
