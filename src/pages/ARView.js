@@ -19,10 +19,12 @@ const ARView = () => {
     init();
 
     async function init() {
+      // Container for full-screen canvas
       container = document.createElement('div');
       container.className = 'three-container';
       document.body.appendChild(container);
 
+      // Scene setup
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
@@ -31,7 +33,7 @@ const ARView = () => {
       renderer.xr.enabled = true;
       container.appendChild(renderer.domElement);
 
-      // AR Button (hidden)
+      // Create and hide default AR button
       arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
       arButton.style.display = 'none';
       document.body.appendChild(arButton);
@@ -41,13 +43,13 @@ const ARView = () => {
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
 
-      // Load 3D Models
+      // Load models
       const models = await Promise.all(
-        selectedObjects.map((object) =>
+        selectedObjects.map(object =>
           new Promise((resolve, reject) => {
             loader.load(
               object.model,
-              (gltf) => {
+              gltf => {
                 const model = gltf.scene;
                 model.scale.set(0.6, 0.6, 0.6);
                 resolve(model);
@@ -59,7 +61,7 @@ const ARView = () => {
         )
       );
 
-      // Reticle setup
+      // Reticle
       const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
       const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.7, transparent: true });
       reticle = new THREE.Mesh(geometry, material);
@@ -67,12 +69,12 @@ const ARView = () => {
       reticle.visible = false;
       scene.add(reticle);
 
-      // Controller tap-to-place
+      // Tap to place model
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
         if (reticle.visible && models.length > 0) {
-          models.forEach((m) => {
-            const clone = m.clone();
+          models.forEach(model => {
+            const clone = model.clone();
             clone.position.setFromMatrixPosition(reticle.matrix);
             clone.quaternion.setFromRotationMatrix(reticle.matrix);
             scene.add(clone);
@@ -81,7 +83,7 @@ const ARView = () => {
       });
       scene.add(controller);
 
-      // XR Session logic
+      // Hit test setup
       renderer.xr.addEventListener('sessionstart', async () => {
         const session = renderer.xr.getSession();
 
@@ -89,14 +91,13 @@ const ARView = () => {
           const viewerSpace = await session.requestReferenceSpace('viewer');
           const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
 
-          // XR-safe render loop
           renderer.setAnimationLoop((timestamp, frame) => {
             if (frame) {
               const referenceSpace = renderer.xr.getReferenceSpace();
-              const hitTestResults = frame.getHitTestResults(hitTestSource);
+              const hits = frame.getHitTestResults(hitTestSource);
 
-              if (hitTestResults.length > 0) {
-                const hit = hitTestResults[0];
+              if (hits.length > 0) {
+                const hit = hits[0];
                 const pose = hit.getPose(referenceSpace);
                 reticle.visible = true;
                 setSurfaceFound(true);
@@ -106,11 +107,10 @@ const ARView = () => {
                 setSurfaceFound(false);
               }
             }
-
             renderer.render(scene, camera);
           });
-        } catch (error) {
-          console.error('Hit-test failed:', error);
+        } catch (err) {
+          console.error('Hit test setup failed:', err);
         }
       });
 
@@ -118,7 +118,6 @@ const ARView = () => {
     }
 
     function onWindowResize() {
-      if (renderer?.xr?.isPresenting) return; // Avoid resizing during AR
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -137,19 +136,19 @@ const ARView = () => {
 
   return (
     <div className="ar-container">
-      {/* Top Bar */}
+      {/* Top bar */}
       <div className="top-bar">
         <p>Selected Objects</p>
         <div className="selected-items">
           {selectedObjects.map((obj, i) => (
             <div className="thumbnail" key={i}>
-              <img src={obj.thumbnail || 'https://via.placeholder.com/40'} alt={`Object ${i}`} />
+              <img src={obj.thumbnail ?? 'https://via.placeholder.com/40'} alt={`Object ${i}`} />
             </div>
           ))}
         </div>
       </div>
 
-      {/* Instruction + Custom AR Start Button */}
+      {/* Status and start */}
       {!isSurfaceFound && (
         <>
           <div className="loading-message">Move your device around to detect a surface...</div>
