@@ -1,136 +1,138 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { ARButton } from 'three/examples/jsm/webxr/ARButton';
 import { useLocation } from 'react-router-dom';
 import './ARView.css';
 
 const ARView = () => {
   const { state } = useLocation();
   const selectedObjects = state?.selectedObjects || [];
-  const mountRef = useRef(null);
   const [isSurfaceFound, setSurfaceFound] = useState(false);
-  const [sessionStarted, setSessionStarted] = useState(false);
-
-  const setupAR = async (session) => {
-    let camera, scene, renderer, controller, reticle;
-    const container = mountRef.current;
-    if (!container) return;
-
-    scene = new THREE.Scene();
-
-    camera = new THREE.PerspectiveCamera(
-      70,
-      container.clientWidth / container.clientHeight,
-      0.01,
-      20
-    );
-
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
-    renderer.xr.enabled = true;
-    container.appendChild(renderer.domElement);
-
-    const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-    scene.add(light);
-
-    const loader = new GLTFLoader();
-    const models = await Promise.all(
-      selectedObjects.map(
-        (object) =>
-          new Promise((resolve, reject) => {
-            loader.load(
-              object.model,
-              (gltf) => {
-                const model = gltf.scene;
-                model.scale.set(0.6, 0.6, 0.6);
-                resolve(model);
-              },
-              undefined,
-              reject
-            );
-          })
-      )
-    );
-
-    const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x00ffff,
-      opacity: 0.7,
-      transparent: true,
-    });
-    reticle = new THREE.Mesh(geometry, material);
-    reticle.matrixAutoUpdate = false;
-    reticle.visible = false;
-    scene.add(reticle);
-
-    controller = renderer.xr.getController(0);
-    controller.addEventListener("select", () => {
-      if (reticle.visible && models.length > 0) {
-        models.forEach((m) => {
-          const clone = m.clone();
-          clone.position.setFromMatrixPosition(reticle.matrix);
-          clone.quaternion.setFromRotationMatrix(reticle.matrix);
-          scene.add(clone);
-        });
-      }
-    });
-    scene.add(controller);
-
-    renderer.xr.setSession(session);
-    setSessionStarted(true);
-
-    // ✅ Safe Reference Space Fallback
-    let referenceSpace = null;
-    try {
-      referenceSpace = await session.requestReferenceSpace("viewer");
-    } catch (e1) {
-      console.warn("viewer not supported, trying local-floor...");
-      try {
-        referenceSpace = await session.requestReferenceSpace("local-floor");
-      } catch (e2) {
-        console.error("❌ No supported reference space found");
-        alert("AR not supported on your device.");
-        return;
-      }
-    }
-
-    const hitTestSource = await session.requestHitTestSource({ space: referenceSpace });
-
-    renderer.setAnimationLoop((timestamp, frame) => {
-      if (frame) {
-        const hitTestResults = frame.getHitTestResults(hitTestSource);
-
-        if (hitTestResults.length > 0) {
-          const hit = hitTestResults[0];
-          const pose = hit.getPose(referenceSpace);
-          reticle.visible = true;
-          setSurfaceFound(true);
-          reticle.matrix.fromArray(pose.transform.matrix);
-        } else {
-          reticle.visible = false;
-          setSurfaceFound(false);
-        }
-      }
-
-      renderer.render(scene, camera);
-    });
-
-    window.addEventListener("resize", () => {
-      const width = container.offsetWidth;
-      const height = container.offsetHeight;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
-    });
-  };
+  const [arButtonRef, setArButtonRef] = useState(null);
 
   useEffect(() => {
+    let camera, scene, renderer, controller, container, reticle;
+    const loader = new GLTFLoader();
+    let arButton;
+
+    init();
+    animate();
+
+    async function init() {
+      container = document.createElement('div');
+      container.className = 'three-container';
+      document.body.appendChild(container);
+
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.xr.enabled = true;
+      container.appendChild(renderer.domElement);
+
+      // AR Button
+      arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
+      arButton.style.display = 'none'; // Hide default
+      document.body.appendChild(arButton);
+      setArButtonRef(arButton); // Save for triggering via custom button
+
+      const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+      scene.add(light);
+
+      const models = await Promise.all(
+        selectedObjects.map(
+          (object) =>
+            new Promise((resolve, reject) => {
+              loader.load(
+                object.model,
+                (gltf) => {
+                  const model = gltf.scene;
+                  model.scale.set(0.6, 0.6, 0.6);
+                  resolve(model);
+                },
+                undefined,
+                reject
+              );
+            })
+        )
+      );
+
+      // Reticle
+      const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.7, transparent: true });
+      reticle = new THREE.Mesh(geometry, material);
+      reticle.matrixAutoUpdate = false;
+      reticle.visible = false;
+      scene.add(reticle);
+
+      // Controller
+      controller = renderer.xr.getController(0);
+      controller.addEventListener('select', () => {
+        if (reticle.visible && models.length > 0) {
+          models.forEach((m) => {
+            const clone = m.clone();
+            clone.position.setFromMatrixPosition(reticle.matrix);
+            clone.quaternion.setFromRotationMatrix(reticle.matrix);
+            scene.add(clone);
+          });
+        }
+      });
+      scene.add(controller);
+
+      renderer.xr.addEventListener('sessionstart', async () => {
+        const session = renderer.xr.getSession();
+        const viewerRefSpace = await session.requestReferenceSpace('viewer');
+        const hitTestSource = await session.requestHitTestSource({ space: viewerRefSpace });
+
+        renderer.setAnimationLoop((timestamp, frame) => {
+          if (frame) {
+            const referenceSpace = renderer.xr.getReferenceSpace();
+            const hitTestResults = frame.getHitTestResults(hitTestSource);
+
+            if (hitTestResults.length > 0) {
+              const hit = hitTestResults[0];
+              const pose = hit.getPose(referenceSpace);
+              reticle.visible = true;
+              setSurfaceFound(true);
+              reticle.matrix.fromArray(pose.transform.matrix);
+            } else {
+              reticle.visible = false;
+              setSurfaceFound(false);
+            }
+          }
+
+          renderer.render(scene, camera);
+        });
+      });
+
+      window.addEventListener('resize', onWindowResize);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
+    }
+
     return () => {
-      if (mountRef.current) {
-        mountRef.current.innerHTML = ''; // Clean up canvas
+      if (renderer && renderer.domElement) {
+        renderer.setAnimationLoop(null);
+        renderer.dispose();
       }
+      if (container) document.body.removeChild(container);
+      if (arButton) document.body.removeChild(arButton);
+      window.removeEventListener('resize', onWindowResize);
     };
-  }, []);
+  }, [selectedObjects]);
 
   return (
     <div className="ar-container">
@@ -146,53 +148,21 @@ const ARView = () => {
         </div>
       </div>
 
-      {/* Camera Screen */}
-      <div className="camera-screen" ref={mountRef}></div>
-
-      {/* Bottom Controls */}
-      <div className="bottom-controls">
-        <button>Rotate</button>
-        <button>Capture</button>
-        <button>Drag</button>
-      </div>
-
-      {/* Start AR */}
-      {!sessionStarted && (
-        <div className="start-ar-overlay">
-          <button
-            onClick={async () => {
-              if (!navigator.xr) {
-                alert('WebXR not supported');
-                return;
-              }
-
-              const isSupported = await navigator.xr.isSessionSupported('immersive-ar');
-              if (!isSupported) {
-                alert('AR not supported on this device');
-                return;
-              }
-
-              try {
-                const session = await navigator.xr.requestSession('immersive-ar', {
-                  requiredFeatures: ['hit-test'],
-                });
-                setupAR(session);
-              } catch (err) {
-                console.error('❌ Failed to start AR session', err);
-                alert('Failed to start AR session. Please try again.');
-              }
-            }}
-          >
-            Start AR
-          </button>
-        </div>
-      )}
-
       {/* Surface Detection Message */}
-      {!isSurfaceFound && sessionStarted && (
+      {!isSurfaceFound && (
         <div className="loading-message">
           Move your device around to detect a surface...
         </div>
+      )}
+
+      {/* Custom Start AR Button */}
+      {!isSurfaceFound && arButtonRef && (
+        <button
+          className="custom-start-ar"
+          onClick={() => arButtonRef.click()}
+        >
+          Start AR
+        </button>
       )}
     </div>
   );
