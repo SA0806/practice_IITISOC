@@ -1,19 +1,13 @@
 .ar-container {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
 }
 
 .top-bar {
-  flex: 0 0 15%;
-  background: rgba(240, 240, 240, 0.95);
-  padding: 10px;
-}
-
-.top-bar p {
-  font-weight: bold;
-  margin-bottom: 5px;
+  background: #ddd;
+  padding: 8px;
 }
 
 .selected-items {
@@ -21,55 +15,62 @@
   gap: 10px;
 }
 
-.thumbnail {
+.thumbnail img {
   width: 40px;
   height: 40px;
-  background-color: #ccc;
-  border-radius: 5px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.camera-screen {
+  flex: 1;
+  position: relative;
   overflow: hidden;
 }
 
-.thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.camera-screen canvas {
+  position: absolute;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
 }
 
-/* Camera area now limited */
-.camera-screen {
-  flex: 1;
-  background: black;
-  position: relative;
-}
-
-/* Bottom control buttons */
 .bottom-controls {
-  flex: 0 0 15%;
-  background: rgba(230, 230, 230, 0.95);
+  background: #eee;
+  padding: 10px;
   display: flex;
   justify-content: space-around;
+}
+
+.start-ar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
   align-items: center;
-  padding: 10px;
+  z-index: 10;
 }
 
-.bottom-controls button {
-  padding: 10px 16px;
-  background-color: #c0c0c0;
+.start-ar-overlay button {
+  padding: 14px 24px;
+  font-size: 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
+  background: #00aaff;
+  color: white;
   font-weight: bold;
-  cursor: pointer;
 }
 
-/* Surface detection text */
 .loading-message {
   position: absolute;
-  bottom: 50%;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 10px;
+  bottom: 100px;
+  width: 100%;
+  text-align: center;
   font-size: 14px;
+  color: white;
 }
