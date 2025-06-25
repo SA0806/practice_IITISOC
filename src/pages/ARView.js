@@ -262,10 +262,36 @@ try {
       {!sessionStarted && (
         <div className="start-ar-overlay">
           {/* <button onClick={startAR}>Start AR</button> */}
-          <button onClick={async () => {
+          {/* <button onClick={async () => {
   await mountRef.current?.requestFullscreen(); // ✅ Force fullscreen
   startAR();
-}}>Start AR</button>
+}}>Start AR</button> */}
+
+<button
+  onClick={async () => {
+    if (!navigator.xr) {
+      alert('WebXR not supported');
+      return;
+    }
+
+    const supported = await navigator.xr.isSessionSupported('immersive-ar');
+    if (!supported) {
+      alert('AR not supported on this device');
+      return;
+    }
+
+    const container = mountRef.current;
+    if (!container) return;
+
+    await container.requestFullscreen(); // Optional: Some browsers need fullscreen first
+
+    // ✅ Now call startAR immediately inside gesture
+    startAR();
+  }}
+>
+  Start AR
+</button>
+
         </div>
       )}
 
