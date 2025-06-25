@@ -77,37 +77,147 @@ const ARView = () => {
     });
     scene.add(controller);
 
-    if (navigator.xr) {
-      const session = await navigator.xr.requestSession('immersive-ar', {
-        requiredFeatures: ['hit-test'],
-      });
+    // if (navigator.xr) {
+    //   const session = await navigator.xr.requestSession('immersive-ar', {
+    //     requiredFeatures: ['hit-test'],
+    //   });
 
-      renderer.xr.setSession(session);
-      setSessionStarted(true);
+    //   renderer.xr.setSession(session);
+    //   setSessionStarted(true);
 
-      const viewerSpace = await session.requestReferenceSpace('viewer');
-      const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
+    //   const viewerSpace = await session.requestReferenceSpace('viewer');
+    //   const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
 
-      renderer.setAnimationLoop((timestamp, frame) => {
-        if (frame) {
-          const referenceSpace = renderer.xr.getReferenceSpace();
-          const hitTestResults = frame.getHitTestResults(hitTestSource);
+    //   renderer.setAnimationLoop((timestamp, frame) => {
+    //     if (frame) {
+    //       const referenceSpace = renderer.xr.getReferenceSpace();
+    //       const hitTestResults = frame.getHitTestResults(hitTestSource);
 
-          if (hitTestResults.length > 0) {
-            const hit = hitTestResults[0];
-            const pose = hit.getPose(referenceSpace);
-            reticle.visible = true;
-            setSurfaceFound(true);
-            reticle.matrix.fromArray(pose.transform.matrix);
-          } else {
-            reticle.visible = false;
-            setSurfaceFound(false);
-          }
-        }
+    //       if (hitTestResults.length > 0) {
+    //         const hit = hitTestResults[0];
+    //         const pose = hit.getPose(referenceSpace);
+    //         reticle.visible = true;
+    //         setSurfaceFound(true);
+    //         reticle.matrix.fromArray(pose.transform.matrix);
+    //       } else {
+    //         reticle.visible = false;
+    //         setSurfaceFound(false);
+    //       }
+    //     }
 
-        renderer.render(scene, camera);
-      });
+    //     renderer.render(scene, camera);
+    //   });
+    // }
+
+//     if (navigator.xr) {
+//   try {
+//     const session = await navigator.xr.requestSession('immersive-ar', {
+//       requiredFeatures: ['hit-test'],
+//     });
+
+//     console.log('✅ XR Session started');
+//     renderer.xr.setSession(session);
+//     setSessionStarted(true);
+
+//     // const viewerSpace = await session.requestReferenceSpace('viewer');
+//     let viewerSpace;
+// try {
+//   viewerSpace = await session.requestReferenceSpace('viewer');
+// } catch (e) {
+//   console.warn('viewer space not supported, trying local');
+//   viewerSpace = await session.requestReferenceSpace('local');
+// }
+
+
+//     const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
+
+//     renderer.setAnimationLoop((timestamp, frame) => {
+//       if (frame) {
+//         const referenceSpace = renderer.xr.getReferenceSpace();
+//         const hitTestResults = frame.getHitTestResults(hitTestSource);
+
+//         if (hitTestResults.length > 0) {
+//           const hit = hitTestResults[0];
+//           const pose = hit.getPose(referenceSpace);
+//           reticle.visible = true;
+//           setSurfaceFound(true);
+//           reticle.matrix.fromArray(pose.transform.matrix);
+//         } else {
+//           reticle.visible = false;
+//           setSurfaceFound(false);
+//         }
+//       }
+
+//       renderer.render(scene, camera);
+//     });
+
+//   } catch (err) {
+//     console.error('❌ Failed to start XR session:', err);
+//   }
+// } else {
+//   console.warn('❌ WebXR not supported on this device/browser');
+// }
+
+
+if (!navigator.xr) {
+  alert("WebXR not supported on this device or browser.");
+  return;
+}
+
+const isSupported = await navigator.xr.isSessionSupported('immersive-ar');
+if (!isSupported) {
+  alert("AR session not supported on this device.");
+  return;
+}
+
+try {
+  const session = await navigator.xr.requestSession('immersive-ar', {
+    requiredFeatures: ['hit-test'],
+  });
+
+  console.log("✅ XR session started");
+  renderer.xr.setSession(session);
+  setSessionStarted(true);
+
+  let viewerSpace;
+  try {
+    viewerSpace = await session.requestReferenceSpace('viewer');
+  } catch (e) {
+    console.warn('viewer reference space not supported, trying local');
+    viewerSpace = await session.requestReferenceSpace('local');
+  }
+
+  const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
+
+  renderer.setAnimationLoop((timestamp, frame) => {
+    if (frame) {
+      const referenceSpace = renderer.xr.getReferenceSpace();
+      const hitTestResults = frame.getHitTestResults(hitTestSource);
+
+      if (hitTestResults.length > 0) {
+        const hit = hitTestResults[0];
+        const pose = hit.getPose(referenceSpace);
+        reticle.visible = true;
+        setSurfaceFound(true);
+        reticle.matrix.fromArray(pose.transform.matrix);
+      } else {
+        reticle.visible = false;
+        setSurfaceFound(false);
+      }
     }
+
+    renderer.render(scene, camera);
+  });
+
+} catch (err) {
+  console.error("❌ Failed to start XR session", err);
+}
+
+
+
+
+
+
 
     window.addEventListener('resize', () => {
       const width = container.offsetWidth;
@@ -151,7 +261,11 @@ const ARView = () => {
       {/* Start AR Overlay */}
       {!sessionStarted && (
         <div className="start-ar-overlay">
-          <button onClick={startAR}>Start AR</button>
+          {/* <button onClick={startAR}>Start AR</button> */}
+          <button onClick={async () => {
+  await mountRef.current?.requestFullscreen(); // ✅ Force fullscreen
+  startAR();
+}}>Start AR</button>
         </div>
       )}
 
