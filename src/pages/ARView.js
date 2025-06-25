@@ -12,118 +12,122 @@ const ARView = () => {
   const [sessionStarted, setSessionStarted] = useState(false);
 
   const setupAR = async (session) => {
-  let camera, scene, renderer, controller, reticle;
-  const container = mountRef.current;
-  if (!container) return;
+    let camera, scene, renderer, controller, reticle;
+    const container = mountRef.current;
+    if (!container) return;
 
-  scene = new THREE.Scene();
+    scene = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera(
-    70,
-    container.clientWidth / container.clientHeight,
-    0.01,
-    20
-  );
+    camera = new THREE.PerspectiveCamera(
+      70,
+      container.clientWidth / container.clientHeight,
+      0.01,
+      20
+    );
 
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(container.offsetWidth, container.offsetHeight);
-  renderer.xr.enabled = true;
-  container.appendChild(renderer.domElement);
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    renderer.xr.enabled = true;
+    container.appendChild(renderer.domElement);
 
-  const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-  scene.add(light);
+    const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+    scene.add(light);
 
-  const loader = new GLTFLoader();
-  const models = await Promise.all(
-    selectedObjects.map(
-      (object) =>
-        new Promise((resolve, reject) => {
-          loader.load(
-            object.model,
-            (gltf) => {
-              const model = gltf.scene;
-              model.scale.set(0.6, 0.6, 0.6);
-              resolve(model);
-            },
-            undefined,
-            reject
-          );
-        })
-    )
-  );
+    const loader = new GLTFLoader();
+    const models = await Promise.all(
+      selectedObjects.map(
+        (object) =>
+          new Promise((resolve, reject) => {
+            loader.load(
+              object.model,
+              (gltf) => {
+                const model = gltf.scene;
+                model.scale.set(0.6, 0.6, 0.6);
+                resolve(model);
+              },
+              undefined,
+              reject
+            );
+          })
+      )
+    );
 
-  const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x00ffff,
-    opacity: 0.7,
-    transparent: true,
-  });
-  reticle = new THREE.Mesh(geometry, material);
-  reticle.matrixAutoUpdate = false;
-  reticle.visible = false;
-  scene.add(reticle);
+    const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
+      opacity: 0.7,
+      transparent: true,
+    });
+    reticle = new THREE.Mesh(geometry, material);
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    scene.add(reticle);
 
-  controller = renderer.xr.getController(0);
-  controller.addEventListener("select", () => {
-    if (reticle.visible && models.length > 0) {
-      models.forEach((m) => {
-        const clone = m.clone();
-        clone.position.setFromMatrixPosition(reticle.matrix);
-        clone.quaternion.setFromRotationMatrix(reticle.matrix);
-        scene.add(clone);
-      });
-    }
-  });
-  scene.add(controller);
+    controller = renderer.xr.getController(0);
+    controller.addEventListener("select", () => {
+      if (reticle.visible && models.length > 0) {
+        models.forEach((m) => {
+          const clone = m.clone();
+          clone.position.setFromMatrixPosition(reticle.matrix);
+          clone.quaternion.setFromRotationMatrix(reticle.matrix);
+          scene.add(clone);
+        });
+      }
+    });
+    scene.add(controller);
 
-  renderer.xr.setSession(session);
-  setSessionStarted(true);
+    renderer.xr.setSession(session);
+    setSessionStarted(true);
 
-  let referenceSpace;
-  try {
-    referenceSpace = await session.requestReferenceSpace("viewer");
-  } catch (e) {
-    console.warn("viewer not supported, using local instead");
-    referenceSpace = await session.requestReferenceSpace("local");
-  }
-
-  const hitTestSource = await session.requestHitTestSource({
-    space: referenceSpace,
-  });
-
-  renderer.setAnimationLoop((timestamp, frame) => {
-    if (frame) {
-      const hitTestResults = frame.getHitTestResults(hitTestSource);
-
-      if (hitTestResults.length > 0) {
-        const hit = hitTestResults[0];
-        const pose = hit.getPose(referenceSpace);
-        reticle.visible = true;
-        setSurfaceFound(true);
-        reticle.matrix.fromArray(pose.transform.matrix);
-      } else {
-        reticle.visible = false;
-        setSurfaceFound(false);
+    // ✅ Safe Reference Space Fallback
+    let referenceSpace = null;
+    try {
+      referenceSpace = await session.requestReferenceSpace("viewer");
+    } catch (e1) {
+      console.warn("viewer not supported, trying local-floor...");
+      try {
+        referenceSpace = await session.requestReferenceSpace("local-floor");
+      } catch (e2) {
+        console.error("❌ No supported reference space found");
+        alert("AR not supported on your device.");
+        return;
       }
     }
 
-    renderer.render(scene, camera);
-  });
+    const hitTestSource = await session.requestHitTestSource({ space: referenceSpace });
 
-  window.addEventListener("resize", () => {
-    const width = container.offsetWidth;
-    const height = container.offsetHeight;
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
-  });
-};
+    renderer.setAnimationLoop((timestamp, frame) => {
+      if (frame) {
+        const hitTestResults = frame.getHitTestResults(hitTestSource);
 
+        if (hitTestResults.length > 0) {
+          const hit = hitTestResults[0];
+          const pose = hit.getPose(referenceSpace);
+          reticle.visible = true;
+          setSurfaceFound(true);
+          reticle.matrix.fromArray(pose.transform.matrix);
+        } else {
+          reticle.visible = false;
+          setSurfaceFound(false);
+        }
+      }
+
+      renderer.render(scene, camera);
+    });
+
+    window.addEventListener("resize", () => {
+      const width = container.offsetWidth;
+      const height = container.offsetHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    });
+  };
 
   useEffect(() => {
     return () => {
       if (mountRef.current) {
-        mountRef.current.innerHTML = ''; // Remove canvas
+        mountRef.current.innerHTML = ''; // Clean up canvas
       }
     };
   }, []);
@@ -172,7 +176,7 @@ const ARView = () => {
                 const session = await navigator.xr.requestSession('immersive-ar', {
                   requiredFeatures: ['hit-test'],
                 });
-                setupAR(session); // ✅ Call your proper setup function
+                setupAR(session);
               } catch (err) {
                 console.error('❌ Failed to start AR session', err);
                 alert('Failed to start AR session. Please try again.');
