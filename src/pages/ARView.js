@@ -5,18 +5,13 @@ import { useLocation } from 'react-router-dom';
 import './ARView.css';
 
 const ARView = () => {
-  
   const { state } = useLocation();
   const selectedObjects = state?.selectedObjects || [];
   const mountRef = useRef(null);
   const [isSurfaceFound, setSurfaceFound] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
 
-  
-
-  const startAR = async () => {
-
-    if (sessionStarted) return; // 🔒 Prevent duplicate sessions
+  const setupAR = async (session) => {
     let camera, scene, renderer, controller, reticle;
     const container = mountRef.current;
     if (!container) return;
@@ -77,147 +72,38 @@ const ARView = () => {
     });
     scene.add(controller);
 
-    // if (navigator.xr) {
-    //   const session = await navigator.xr.requestSession('immersive-ar', {
-    //     requiredFeatures: ['hit-test'],
-    //   });
+    renderer.xr.setSession(session);
+    setSessionStarted(true);
 
-    //   renderer.xr.setSession(session);
-    //   setSessionStarted(true);
-
-    //   const viewerSpace = await session.requestReferenceSpace('viewer');
-    //   const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
-
-    //   renderer.setAnimationLoop((timestamp, frame) => {
-    //     if (frame) {
-    //       const referenceSpace = renderer.xr.getReferenceSpace();
-    //       const hitTestResults = frame.getHitTestResults(hitTestSource);
-
-    //       if (hitTestResults.length > 0) {
-    //         const hit = hitTestResults[0];
-    //         const pose = hit.getPose(referenceSpace);
-    //         reticle.visible = true;
-    //         setSurfaceFound(true);
-    //         reticle.matrix.fromArray(pose.transform.matrix);
-    //       } else {
-    //         reticle.visible = false;
-    //         setSurfaceFound(false);
-    //       }
-    //     }
-
-    //     renderer.render(scene, camera);
-    //   });
-    // }
-
-//     if (navigator.xr) {
-//   try {
-//     const session = await navigator.xr.requestSession('immersive-ar', {
-//       requiredFeatures: ['hit-test'],
-//     });
-
-//     console.log('✅ XR Session started');
-//     renderer.xr.setSession(session);
-//     setSessionStarted(true);
-
-//     // const viewerSpace = await session.requestReferenceSpace('viewer');
-//     let viewerSpace;
-// try {
-//   viewerSpace = await session.requestReferenceSpace('viewer');
-// } catch (e) {
-//   console.warn('viewer space not supported, trying local');
-//   viewerSpace = await session.requestReferenceSpace('local');
-// }
-
-
-//     const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
-
-//     renderer.setAnimationLoop((timestamp, frame) => {
-//       if (frame) {
-//         const referenceSpace = renderer.xr.getReferenceSpace();
-//         const hitTestResults = frame.getHitTestResults(hitTestSource);
-
-//         if (hitTestResults.length > 0) {
-//           const hit = hitTestResults[0];
-//           const pose = hit.getPose(referenceSpace);
-//           reticle.visible = true;
-//           setSurfaceFound(true);
-//           reticle.matrix.fromArray(pose.transform.matrix);
-//         } else {
-//           reticle.visible = false;
-//           setSurfaceFound(false);
-//         }
-//       }
-
-//       renderer.render(scene, camera);
-//     });
-
-//   } catch (err) {
-//     console.error('❌ Failed to start XR session:', err);
-//   }
-// } else {
-//   console.warn('❌ WebXR not supported on this device/browser');
-// }
-
-
-if (!navigator.xr) {
-  alert("WebXR not supported on this device or browser.");
-  return;
-}
-
-const isSupported = await navigator.xr.isSessionSupported('immersive-ar');
-if (!isSupported) {
-  alert("AR session not supported on this device.");
-  return;
-}
-
-try {
-  const session = await navigator.xr.requestSession('immersive-ar', {
-    requiredFeatures: ['hit-test'],
-  });
-
-  console.log("✅ XR session started");
-  renderer.xr.setSession(session);
-  setSessionStarted(true);
-
-  let viewerSpace;
-  try {
-    viewerSpace = await session.requestReferenceSpace('viewer');
-  } catch (e) {
-    console.warn('viewer reference space not supported, trying local');
-    viewerSpace = await session.requestReferenceSpace('local');
-  }
-
-  const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
-
-  renderer.setAnimationLoop((timestamp, frame) => {
-    if (frame) {
-      const referenceSpace = renderer.xr.getReferenceSpace();
-      const hitTestResults = frame.getHitTestResults(hitTestSource);
-
-      if (hitTestResults.length > 0) {
-        const hit = hitTestResults[0];
-        const pose = hit.getPose(referenceSpace);
-        reticle.visible = true;
-        setSurfaceFound(true);
-        reticle.matrix.fromArray(pose.transform.matrix);
-      } else {
-        reticle.visible = false;
-        setSurfaceFound(false);
-      }
+    let viewerSpace;
+    try {
+      viewerSpace = await session.requestReferenceSpace('viewer');
+    } catch (e) {
+      console.warn('viewer reference space not supported, using local');
+      viewerSpace = await session.requestReferenceSpace('local');
     }
 
-    renderer.render(scene, camera);
-  });
+    const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
 
-} catch (err) {
-  console.error("❌ Failed to start XR session", err);
-}
+    renderer.setAnimationLoop((timestamp, frame) => {
+      if (frame) {
+        const referenceSpace = renderer.xr.getReferenceSpace();
+        const hitTestResults = frame.getHitTestResults(hitTestSource);
 
+        if (hitTestResults.length > 0) {
+          const hit = hitTestResults[0];
+          const pose = hit.getPose(referenceSpace);
+          reticle.visible = true;
+          setSurfaceFound(true);
+          reticle.matrix.fromArray(pose.transform.matrix);
+        } else {
+          reticle.visible = false;
+          setSurfaceFound(false);
+        }
+      }
 
-
-
-
-
+      renderer.render(scene, camera);
+    });
 
     window.addEventListener('resize', () => {
       const width = container.offsetWidth;
@@ -227,13 +113,15 @@ try {
       renderer.setSize(width, height);
     });
   };
-   useEffect(() => {
-  return () => {
-    if (mountRef.current) {
-      mountRef.current.innerHTML = ''; // Remove canvas from DOM
-    }
-  };
-}, []);
+
+  useEffect(() => {
+    return () => {
+      if (mountRef.current) {
+        mountRef.current.innerHTML = ''; // Remove canvas
+      }
+    };
+  }, []);
+
   return (
     <div className="ar-container">
       {/* Top Bar */}
@@ -258,43 +146,39 @@ try {
         <button>Drag</button>
       </div>
 
-      {/* Start AR Overlay */}
+      {/* Start AR */}
       {!sessionStarted && (
         <div className="start-ar-overlay">
-          {/* <button onClick={startAR}>Start AR</button> */}
-          {/* <button onClick={async () => {
-  await mountRef.current?.requestFullscreen(); // ✅ Force fullscreen
-  startAR();
-}}>Start AR</button> */}
+          <button
+            onClick={async () => {
+              if (!navigator.xr) {
+                alert('WebXR not supported');
+                return;
+              }
 
-<button
-  onClick={async () => {
-    if (!navigator.xr) {
-      alert('WebXR not supported');
-      return;
-    }
+              const isSupported = await navigator.xr.isSessionSupported('immersive-ar');
+              if (!isSupported) {
+                alert('AR not supported on this device');
+                return;
+              }
 
-    const supported = await navigator.xr.isSessionSupported('immersive-ar');
-    if (!supported) {
-      alert('AR not supported on this device');
-      return;
-    }
-
-    const container = mountRef.current;
-    if (!container) return;
-
-    await container.requestFullscreen(); // Optional: Some browsers need fullscreen first
-
-    // ✅ Now call startAR immediately inside gesture
-    startAR();
-  }}
->
-  Start AR
-</button>
-
+              try {
+                const session = await navigator.xr.requestSession('immersive-ar', {
+                  requiredFeatures: ['hit-test'],
+                });
+                setupAR(session); // ✅ Call your proper setup function
+              } catch (err) {
+                console.error('❌ Failed to start AR session', err);
+                alert('Failed to start AR session. Please try again.');
+              }
+            }}
+          >
+            Start AR
+          </button>
         </div>
       )}
 
+      {/* Surface Detection Message */}
       {!isSurfaceFound && sessionStarted && (
         <div className="loading-message">
           Move your device around to detect a surface...
