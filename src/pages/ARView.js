@@ -5,13 +5,18 @@ import { useLocation } from 'react-router-dom';
 import './ARView.css';
 
 const ARView = () => {
+  
   const { state } = useLocation();
   const selectedObjects = state?.selectedObjects || [];
   const mountRef = useRef(null);
   const [isSurfaceFound, setSurfaceFound] = useState(false);
   const [sessionStarted, setSessionStarted] = useState(false);
 
+  
+
   const startAR = async () => {
+
+    if (sessionStarted) return; // 🔒 Prevent duplicate sessions
     let camera, scene, renderer, controller, reticle;
     const container = mountRef.current;
     if (!container) return;
@@ -112,7 +117,13 @@ const ARView = () => {
       renderer.setSize(width, height);
     });
   };
-
+   useEffect(() => {
+  return () => {
+    if (mountRef.current) {
+      mountRef.current.innerHTML = ''; // Remove canvas from DOM
+    }
+  };
+}, []);
   return (
     <div className="ar-container">
       {/* Top Bar */}

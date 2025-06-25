@@ -26,6 +26,10 @@
   flex: 1;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 60vh; /* Adjust this for desired camera view height */
+  position: relative;
+  overflow: hidden;
 }
 
 .camera-screen canvas {
@@ -64,6 +68,8 @@
   background: #00aaff;
   color: white;
   font-weight: bold;
+
+  
 }
 
 .loading-message {
@@ -73,4 +79,28 @@
   text-align: center;
   font-size: 14px;
   color: white;
+}
+
+
+.start-ar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.start-ar-overlay button {
+  font-size: 18px;
+  padding: 12px 24px;
+  background: #00b894;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
