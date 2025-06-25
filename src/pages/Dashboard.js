@@ -8,6 +8,7 @@ import ImageCard from '../components/ImageCard';
 import { useNavigate } from 'react-router-dom';
 import SelectedItemsBar from '../components/SelectedItemsBar';
 import ARButton from '../components/ARButton';
+import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 
 
 // const categories = ["Furniture", "Architecture", "Decor", "Paint Colours"];
@@ -15,7 +16,8 @@ import ARButton from '../components/ARButton';
 
 const Dashboard = ({ navigateToAR }) => {
   const [activeCategory, setActiveCategory] = useState('');
-  const [selectedObjects, setSelectedObjects] = useState([]);
+ const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
+  
 //   const toggleObjectSelection = (object) => {
 //     console.log("Selected objects:", selectedObjects);
 
@@ -26,17 +28,17 @@ const Dashboard = ({ navigateToAR }) => {
 //     setSelectedObjects([...selectedObjects, object]);
 //   }
 // };
-const toggleObjectSelection = (object) => {
-  setSelectedObjects((prev) => {
-    const exists = prev.find((obj) => obj.name === object.name);
-    const updated = exists
-      ? prev.filter((obj) => obj.name !== object.name)
-      : [...prev, object];
+// toggleObjectSelection = (object) => {
+//   setSelectedObjects((prev) => {
+//     const exists = prev.find((obj) => obj.name === object.name);
+//     const updated = exists
+//       ? prev.filter((obj) => obj.name !== object.name)
+//       : [...prev, object];
 
-    console.log("✅ Updated selected objects:", updated);
-    return updated;
-  });
-};
+//     console.log("✅ Updated selected objects:", updated);
+//     return updated;
+//   });
+// };
 
 const navigate = useNavigate();
 

@@ -5,11 +5,18 @@ import { ARButton } from 'three/examples/jsm/webxr/ARButton';
 import { useLocation } from 'react-router-dom';
 import './ARView.css';
 
+import SelectedItemsBar from '../components/SelectedItemsBar';
+import { useSelectedObjects } from '../Context/SelectedObjectsContext';
+
 const ARView = () => {
   const { state } = useLocation();
-  const selectedObjects = state?.selectedObjects || [];
+  // const selectedObjects = state?.selectedObjects || [];
+
+ const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
   const [isSurfaceFound, setSurfaceFound] = useState(false);
   const [arButtonRef, setArButtonRef] = useState(null);
+  
+
 
   useEffect(() => {
     let camera, scene, renderer, controller, container, reticle;
@@ -137,16 +144,11 @@ const ARView = () => {
   return (
     <div className="ar-container">
       {/* Top bar */}
-      <div className="top-bar">
-        <p>Selected Objects</p>
-        <div className="selected-items">
-          {selectedObjects.map((obj, i) => (
-            <div className="thumbnail" key={i}>
-              <img src={obj.thumbnail ?? 'https://via.placeholder.com/40'} alt={`Object ${i}`} />
-            </div>
-          ))}
-        </div>
-      </div>
+      <SelectedItemsBar
+  selectedObjects={selectedObjects}
+  toggleObjectSelection={toggleObjectSelection}
+/>
+
 
       {/* Status and start */}
       {!isSurfaceFound && (
