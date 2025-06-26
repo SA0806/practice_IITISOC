@@ -42,9 +42,11 @@ const ARView = () => {
 
       // Create and hide default AR button
       arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
-      arButton.style.display = 'none';
+      // arButton.style.display = 'none';
       document.body.appendChild(arButton);
-      setArButtonRef(arButton);
+      // setArButtonRef(arButton);
+      arButton.classList.add('custom-ar-button'); // already styled in CSS
+
 
       // Lighting
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
@@ -156,11 +158,7 @@ const ARView = () => {
       {!isSurfaceFound && (
         <>
           <div className={`loading-message ${isSurfaceFound ? 'hidden' : ''}`}>Move your device around to detect a surface...</div>
-          {arButtonRef && (
-            <button className="custom-start-ar" onClick={() => arButtonRef.click()}>
-              Start AR
-            </button>
-          )}
+         
         </>
       )}
     </div>
