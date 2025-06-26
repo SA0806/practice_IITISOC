@@ -223,6 +223,10 @@
   opacity: 0.8 !important;
   
 }
+.custom-ar-button:hover {
+  background-color: #ffdddd !important;
+  transform: translateX(-50%) scale(1.05);
+}
 .back-button {
   position: fixed;
   top: 10px;
