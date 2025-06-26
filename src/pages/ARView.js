@@ -144,16 +144,18 @@ const ARView = () => {
   return (
     <div className="ar-container">
       {/* Top bar */}
+      <div className='top-bar'>
       <SelectedItemsBar
   selectedObjects={selectedObjects}
   toggleObjectSelection={toggleObjectSelection}
 />
+</div>
 
 
       {/* Status and start */}
       {!isSurfaceFound && (
         <>
-          <div className="loading-message">Move your device around to detect a surface...</div>
+          <div className={`loading-message ${isSurfaceFound ? 'hidden' : ''}`}>Move your device around to detect a surface...</div>
           {arButtonRef && (
             <button className="custom-start-ar" onClick={() => arButtonRef.click()}>
               Start AR
