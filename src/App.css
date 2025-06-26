@@ -1,7 +1,9 @@
-body{
-    width: 100vw;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  overflow-x: hidden; /* ✅ hides horizontal scroll */
 }
-
 .App {
   text-align: center;
   
