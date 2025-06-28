@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton';
+import { useLocation } from 'react-router-dom';
 import './ARView.css';
+
 import SelectedItemsBar from '../components/SelectedItemsBar';
 import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 
@@ -16,16 +18,17 @@ const ARView = () => {
     let camera, scene, renderer, controller, container, reticle;
     const loader = new GLTFLoader();
     let arButton;
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
 
     init();
 
     async function init() {
       container = document.createElement('div');
       container.className = 'three-container';
-      container.style.position = 'fixed';
-      container.style.top = '0';
-      container.style.left = '0';
-      container.style.zIndex = '1';
       document.body.appendChild(container);
 
       scene = new THREE.Scene();
@@ -37,8 +40,8 @@ const ARView = () => {
       container.appendChild(renderer.domElement);
 
       arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
-      arButton.classList.add('custom-ar-button');
       document.body.appendChild(arButton);
+      arButton.classList.add('custom-ar-button');
 
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
@@ -70,7 +73,7 @@ const ARView = () => {
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
         if (reticle.visible && loadedModels.length > 0) {
-          loadedModels.forEach(model => {
+          loadedModels.forEach((model, index) => {
             const clone = model.clone();
             clone.position.setFromMatrixPosition(reticle.matrix);
             clone.quaternion.setFromRotationMatrix(reticle.matrix);
@@ -111,11 +114,7 @@ const ARView = () => {
         }
       });
 
-      function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      }
+      
 
       window.addEventListener('resize', onWindowResize);
     }
@@ -127,6 +126,7 @@ const ARView = () => {
       }
       if (container) document.body.removeChild(container);
       if (arButton) document.body.removeChild(arButton);
+      window.removeEventListener('resize', onWindowResize);
     };
   }, [selectedObjects]);
 
@@ -139,7 +139,7 @@ const ARView = () => {
 
   return (
     <div className="ar-container">
-      <div className="top-bar">
+      <div className='top-bar'>
         <SelectedItemsBar selectedObjects={selectedObjects} toggleObjectSelection={toggleObjectSelection} />
       </div>
 
@@ -148,19 +148,23 @@ const ARView = () => {
       )}
 
       {activeModel && (
-        <div className="ui-controls">
-          <label>
-            Position X:
-            <input type="range" min="-1" max="1" step="0.01" value={uiValues.x} onChange={(e) => setUiValues({ ...uiValues, x: parseFloat(e.target.value) })} />
-          </label>
-          <label>
-            Scale:
-            <input type="range" min="0.1" max="2" step="0.01" value={uiValues.scale} onChange={(e) => setUiValues({ ...uiValues, scale: parseFloat(e.target.value) })} />
-          </label>
-          <label>
-            Rotation Y:
-            <input type="range" min="0" max="6.28" step="0.01" value={uiValues.rotation} onChange={(e) => setUiValues({ ...uiValues, rotation: parseFloat(e.target.value) })} />
-          </label>
+        <div className="ui-controls" style={{
+          position: 'fixed',
+          bottom: '100px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 9999,
+          background: 'rgba(255, 255, 255, 0.8)',
+          padding: '12px',
+          borderRadius: '10px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+          maxWidth: '90vw'
+        }}>
+          <label>Position X: <input type="range" min="-1" max="1" step="0.01" value={uiValues.x} onChange={e => setUiValues({ ...uiValues, x: parseFloat(e.target.value) })} /></label>
+          <label>Scale: <input type="range" min="0.1" max="2" step="0.01" value={uiValues.scale} onChange={e => setUiValues({ ...uiValues, scale: parseFloat(e.target.value) })} /></label>
+          <label>Rotation Y: <input type="range" min="0" max="6.28" step="0.01" value={uiValues.rotation} onChange={e => setUiValues({ ...uiValues, rotation: parseFloat(e.target.value) })} /></label>
         </div>
       )}
     </div>
