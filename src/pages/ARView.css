@@ -205,3 +205,29 @@
   z-index: 10000;
 }
 
+.ui-controls {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 90vw;
+  max-width: 400px;
+}
+
+.ui-controls label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.ui-controls input[type="range"] {
+  width: 100%;
+}
