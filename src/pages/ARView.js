@@ -9,14 +9,10 @@ import SelectedItemsBar from '../components/SelectedItemsBar';
 import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 
 const ARView = () => {
-  const { state } = useLocation();
-  // const selectedObjects = state?.selectedObjects || [];
-
- const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
+  const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
   const [isSurfaceFound, setSurfaceFound] = useState(false);
-  const [arButtonRef, setArButtonRef] = useState(null);
-  
-
+  const [activeModel, setActiveModel] = useState(null);
+  const [uiValues, setUiValues] = useState({ x: 0, scale: 1, rotation: 0 });
 
   useEffect(() => {
     let camera, scene, renderer, controller, container, reticle;
@@ -26,12 +22,10 @@ const ARView = () => {
     init();
 
     async function init() {
-      // Container for full-screen canvas
       container = document.createElement('div');
       container.className = 'three-container';
       document.body.appendChild(container);
 
-      // Scene setup
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
@@ -40,20 +34,14 @@ const ARView = () => {
       renderer.xr.enabled = true;
       container.appendChild(renderer.domElement);
 
-      // Create and hide default AR button
       arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
-      // arButton.style.display = 'none';
       document.body.appendChild(arButton);
-      // setArButtonRef(arButton);
-      arButton.classList.add('custom-ar-button'); // already styled in CSS
+      arButton.classList.add('custom-ar-button');
 
-
-      // Lighting
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
 
-      // Load models
-      const models = await Promise.all(
+      const loadedModels = await Promise.all(
         selectedObjects.map(object =>
           new Promise((resolve, reject) => {
             loader.load(
@@ -70,7 +58,6 @@ const ARView = () => {
         )
       );
 
-      // Reticle
       const geometry = new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2);
       const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, opacity: 0.7, transparent: true });
       reticle = new THREE.Mesh(geometry, material);
@@ -78,21 +65,20 @@ const ARView = () => {
       reticle.visible = false;
       scene.add(reticle);
 
-      // Tap to place model
       controller = renderer.xr.getController(0);
       controller.addEventListener('select', () => {
-        if (reticle.visible && models.length > 0) {
-          models.forEach(model => {
+        if (reticle.visible && loadedModels.length > 0) {
+          loadedModels.forEach((model, index) => {
             const clone = model.clone();
             clone.position.setFromMatrixPosition(reticle.matrix);
             clone.quaternion.setFromRotationMatrix(reticle.matrix);
             scene.add(clone);
+            setActiveModel(clone);
           });
         }
       });
       scene.add(controller);
 
-      // Hit test setup
       renderer.xr.addEventListener('sessionstart', async () => {
         const session = renderer.xr.getSession();
 
@@ -143,23 +129,30 @@ const ARView = () => {
     };
   }, [selectedObjects]);
 
+  // Slider Handlers
+  useEffect(() => {
+    if (!activeModel) return;
+    activeModel.position.x = uiValues.x;
+    activeModel.scale.set(uiValues.scale, uiValues.scale, uiValues.scale);
+    activeModel.rotation.y = uiValues.rotation;
+  }, [uiValues]);
+
   return (
     <div className="ar-container">
-      {/* Top bar */}
       <div className='top-bar'>
-      <SelectedItemsBar
-  selectedObjects={selectedObjects}
-  toggleObjectSelection={toggleObjectSelection}
-/>
-</div>
+        <SelectedItemsBar selectedObjects={selectedObjects} toggleObjectSelection={toggleObjectSelection} />
+      </div>
 
-
-      {/* Status and start */}
       {!isSurfaceFound && (
-        <>
-          <div className={`loading-message ${isSurfaceFound ? 'hidden' : ''}`}>Move your device around to detect a surface...</div>
-         
-        </>
+        <div className="loading-message">Move your device around to detect a surface...</div>
+      )}
+
+      {activeModel && (
+        <div className="ui-controls">
+          <label>Position X: <input type="range" min="-1" max="1" step="0.01" value={uiValues.x} onChange={e => setUiValues({ ...uiValues, x: parseFloat(e.target.value) })} /></label>
+          <label>Scale: <input type="range" min="0.1" max="2" step="0.01" value={uiValues.scale} onChange={e => setUiValues({ ...uiValues, scale: parseFloat(e.target.value) })} /></label>
+          <label>Rotation Y: <input type="range" min="0" max="6.28" step="0.01" value={uiValues.rotation} onChange={e => setUiValues({ ...uiValues, rotation: parseFloat(e.target.value) })} /></label>
+        </div>
       )}
     </div>
   );
