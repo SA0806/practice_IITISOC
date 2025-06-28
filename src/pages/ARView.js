@@ -22,6 +22,10 @@ const ARView = () => {
     async function init() {
       container = document.createElement('div');
       container.className = 'three-container';
+      container.style.position = 'fixed';
+      container.style.top = '0';
+      container.style.left = '0';
+      container.style.zIndex = '1';
       document.body.appendChild(container);
 
       scene = new THREE.Scene();
@@ -71,7 +75,7 @@ const ARView = () => {
             clone.position.setFromMatrixPosition(reticle.matrix);
             clone.quaternion.setFromRotationMatrix(reticle.matrix);
             scene.add(clone);
-            setActiveModel(clone); // Track the last placed object
+            setActiveModel(clone);
           });
         }
       });
@@ -107,13 +111,13 @@ const ARView = () => {
         }
       });
 
-      window.addEventListener('resize', onWindowResize);
-
       function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       }
+
+      window.addEventListener('resize', onWindowResize);
     }
 
     return () => {
@@ -123,11 +127,9 @@ const ARView = () => {
       }
       if (container) document.body.removeChild(container);
       if (arButton) document.body.removeChild(arButton);
-      window.removeEventListener('resize', () => {});
     };
   }, [selectedObjects]);
 
-  // Apply slider values to the active model
   useEffect(() => {
     if (!activeModel) return;
     activeModel.position.x = uiValues.x;
@@ -138,10 +140,7 @@ const ARView = () => {
   return (
     <div className="ar-container">
       <div className="top-bar">
-        <SelectedItemsBar
-          selectedObjects={selectedObjects}
-          toggleObjectSelection={toggleObjectSelection}
-        />
+        <SelectedItemsBar selectedObjects={selectedObjects} toggleObjectSelection={toggleObjectSelection} />
       </div>
 
       {!isSurfaceFound && (
@@ -152,36 +151,15 @@ const ARView = () => {
         <div className="ui-controls">
           <label>
             Position X:
-            <input
-              type="range"
-              min="-1"
-              max="1"
-              step="0.01"
-              value={uiValues.x}
-              onChange={(e) => setUiValues({ ...uiValues, x: parseFloat(e.target.value) })}
-            />
+            <input type="range" min="-1" max="1" step="0.01" value={uiValues.x} onChange={(e) => setUiValues({ ...uiValues, x: parseFloat(e.target.value) })} />
           </label>
           <label>
             Scale:
-            <input
-              type="range"
-              min="0.1"
-              max="2"
-              step="0.01"
-              value={uiValues.scale}
-              onChange={(e) => setUiValues({ ...uiValues, scale: parseFloat(e.target.value) })}
-            />
+            <input type="range" min="0.1" max="2" step="0.01" value={uiValues.scale} onChange={(e) => setUiValues({ ...uiValues, scale: parseFloat(e.target.value) })} />
           </label>
           <label>
             Rotation Y:
-            <input
-              type="range"
-              min="0"
-              max="6.28"
-              step="0.01"
-              value={uiValues.rotation}
-              onChange={(e) => setUiValues({ ...uiValues, rotation: parseFloat(e.target.value) })}
-            />
+            <input type="range" min="0" max="6.28" step="0.01" value={uiValues.rotation} onChange={(e) => setUiValues({ ...uiValues, rotation: parseFloat(e.target.value) })} />
           </label>
         </div>
       )}
