@@ -18,7 +18,7 @@ const ARView = () => {
     let camera, scene, renderer, controller, container, reticle;
     const loader = new GLTFLoader();
     let arButton;
-    function onWindowResize() {
+     function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -114,7 +114,7 @@ const ARView = () => {
         }
       });
 
-      
+     
 
       window.addEventListener('resize', onWindowResize);
     }
