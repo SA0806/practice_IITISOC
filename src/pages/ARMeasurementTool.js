@@ -13,12 +13,12 @@ const ARMeasurementTool = () => {
   const reticleRef = useRef();
   const hitTestSourceRef = useRef(null);
   const hitTestSourceRequested = useRef(false);
+  const referenceSpaceRef = useRef();
 
   useEffect(() => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // const camera = new THREE.PerspectiveCamera(); //no need to use it, since WebXR handles the camera internally. You can safely remove it.
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
@@ -28,18 +28,19 @@ const ARMeasurementTool = () => {
     document.body.appendChild(
       ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] })
     );
+
     renderer.xr.addEventListener('sessionstart', () => {
-  console.log("✅ AR session started");
-});
-renderer.xr.addEventListener('sessionerror', (e) => {
-  console.error("❌ AR session failed:", e);
-});
+      console.log("✅ AR session started");
+    });
 
-
+    renderer.xr.addEventListener('sessionerror', (e) => {
+      console.error("❌ AR session failed:", e);
+    });
 
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
 
+    // Reticle
     const reticle = new THREE.Mesh(
       new THREE.RingGeometry(0.05, 0.06, 32).rotateX(-Math.PI / 2),
       new THREE.MeshBasicMaterial({ color: 0x00ff00 })
@@ -105,50 +106,55 @@ renderer.xr.addEventListener('sessionerror', (e) => {
   };
 
   const render = (timestamp, frame) => {
-  const renderer = rendererRef.current;
-  const reticle = reticleRef.current;
-  const scene = sceneRef.current;
+    const renderer = rendererRef.current;
+    const reticle = reticleRef.current;
+    const scene = sceneRef.current;
 
-  if (!renderer || !scene || !renderer.xr.isPresenting) return;
+    if (!renderer || !scene || !renderer.xr.isPresenting || !frame) return;
 
-  if (frame) {
-    const referenceSpace = renderer.xr.getReferenceSpace();
     const session = renderer.xr.getSession();
 
+    if (!referenceSpaceRef.current) {
+      referenceSpaceRef.current = renderer.xr.getReferenceSpace();
+    }
+
     if (!hitTestSourceRequested.current) {
-      session.requestReferenceSpace('viewer').then(space => {
-        session.requestHitTestSource({ space }).then(source => {
+      session.requestReferenceSpace('viewer').then(viewerSpace => {
+        session.requestHitTestSource({ space: viewerSpace }).then(source => {
           hitTestSourceRef.current = source;
         });
       });
+
       session.addEventListener('end', () => {
         hitTestSourceRequested.current = false;
         hitTestSourceRef.current = null;
+        referenceSpaceRef.current = null;
       });
+
       hitTestSourceRequested.current = true;
     }
 
-    if (hitTestSourceRef.current) {
+    if (hitTestSourceRef.current && referenceSpaceRef.current) {
       const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
       if (hitTestResults.length > 0) {
         const hit = hitTestResults[0];
-        const pose = hit.getPose(referenceSpace);
+        const pose = hit.getPose(referenceSpaceRef.current);
 
-        reticle.visible = true;
-        reticle.matrix.fromArray(pose.transform.matrix);
-        reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
+        if (pose) {
+          reticle.visible = true;
+          reticle.matrix.fromArray(pose.transform.matrix);
+          reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
+        }
       } else {
         reticle.visible = false;
       }
     }
-  }
 
-  const xrCamera = renderer.xr.getCamera?.();
-  if (xrCamera) {
-    renderer.render(scene, xrCamera);
-  }
-};
-
+    const xrCamera = renderer.xr.getCamera?.();
+    if (xrCamera) {
+      renderer.render(scene, xrCamera);
+    }
+  };
 
   return (
     <>
