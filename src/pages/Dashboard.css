@@ -1,19 +1,56 @@
 /* src/pages/Dashboard.css */
 .dashboard {
   padding: 40px;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   text-align: center;
   background: #f8f9fa;
   min-height: 100vh;
   width: 100vw;
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  font-family: "Segoe UI", sans-serif;
+
 }
 
 .section-title {
-  font-size: 28px;
+  /* font-size: 28px;
   margin-bottom: 30px;
-  color: #333;
+  color: #333; */
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-family: "Segoe UI", sans-serif;
+  animation: typing 4s steps(45, end) forwards, hide-cursor 0.1s 4s forwards;
+  text-align: center;
+  align-items: center;
+  border-right: 2px solid white;
+}
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 36ch;
+  }
 }
 
+@keyframes hide-cursor {
+  to {
+    border-right: none;
+  }
+}
+.section-title-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .dashboard-content {
   display: flex;
   justify-content: space-around;
@@ -108,12 +145,7 @@
   justify-content: flex-start;
 }
 
-
-
-
-
 /* Ensure space is available for bottom bar */
 .dashboard {
   padding-bottom: 160px;
 }
-

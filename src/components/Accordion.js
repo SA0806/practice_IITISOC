@@ -56,7 +56,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
 
     </div>
   </div>
-  <div className="accordion-item">
+  {/* <div className="accordion-item">
     <h2 className="accordion-header">
       <button
         className="accordion-button collapsed"
@@ -73,7 +73,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
       id="collapseTwo"
       className="accordion-collapse collapse"
       data-bs-parent="#accordionExample"
-    >
+    > */}
       {/* <div className="accordion-body">
         <strong>This is the second item’s accordion body.</strong> It is hidden
         by default, until the collapse plugin adds the appropriate classes that
@@ -84,7 +84,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
         the <code>.accordion-body</code>, though the transition does limit
         overflow.
       </div> */}
-      <div className="accordion-body d-flex flex-wrap gap-3">
+      {/* <div className="accordion-body d-flex flex-wrap gap-3">
        {objectData["Paint Colours"].map((item, index) => (
        <ImageCard 
             key={index} 
@@ -97,7 +97,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
       </div>
 
     </div>
-  </div>
+  </div> */}
   <div className="accordion-item">
     <h2 className="accordion-header">
       <button

@@ -50,10 +50,7 @@ const Homepage = () => {
     <div className="H-text">
       <h2>Home Designing Software</h2>
       <p>
-        Struggling to Design your dream Home? Let's make it easy! From creating
-        floor plan to funishing and selecting materials, you can Desing a cozy ,
-        perfect apace online . whether its a cottage or family home, everything
-        you need is just few click away!
+        Struggling to design your dream home? Let's make it easy! From creating floor plans to furnishing and selecting materials, you can design a cozy, perfect space online. Whether it's a cottage or family home, everything you need is just a few clicks away!
       </p>
       <div className="H-cta">
         <p>Ready to Build Your Dream Home?</p>
