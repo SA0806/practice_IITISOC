@@ -149,3 +149,10 @@
 .dashboard {
   padding-bottom: 160px;
 }
+@media  (max-width: 1024px) {
+
+  .section-title{
+    font-size: 4.5vw;
+  }
+  
+}
