@@ -18,7 +18,7 @@ const ARMeasurementTool = () => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    const camera = new THREE.PerspectiveCamera(); //no need to use it, since WebXR handles the camera internally. You can safely remove it.
+    // const camera = new THREE.PerspectiveCamera(); //no need to use it, since WebXR handles the camera internally. You can safely remove it.
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
@@ -28,6 +28,14 @@ const ARMeasurementTool = () => {
     document.body.appendChild(
       ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] })
     );
+    renderer.xr.addEventListener('sessionstart', () => {
+  console.log("✅ AR session started");
+});
+renderer.xr.addEventListener('sessionerror', (e) => {
+  console.error("❌ AR session failed:", e);
+});
+
+
 
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
