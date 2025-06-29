@@ -71,6 +71,14 @@ const objectData = {
     { name: "Wall", image: "/assets/images/Architecture/pm_wall.PNG" , model: "/assets/models/Architecture/pm_wall.glb"},
     { name: "Wood Pillar", image: "/assets/images/Architecture/wood_pillar.PNG", model: "/assets/models/Architecture/wood_pillar.glb" },
     { name: "Wooden Door", image: "/assets/images/Architecture/wooden_door.PNG", model: "/assets/models/Architecture/wooden_door.glb" },
+    { name: "Castle Wall", image: "/assets/images/Architecture/castle_wall_sbxuw_high.PNG" , model: "/assets/models/Architecture/castle_wall_sbxuw_high.glb"},
+    { name: "Ceramic Mosaic Wall", image: "/assets/images/Architecture/ceramic_mosaic_relief_stribrnicka_school.PNG" , model: "/assets/models/Architecture/ceramic_mosaic_relief_stribrnicka_school.glb"},
+    { name: "Door", image: "/assets/images/Architecture/door_glb.PNG" , model: "/assets/models/Architecture/door_glb.glb"},
+    { name: "Double Doors", image: "/assets/images/Architecture/double_doors.PNG" , model: "/assets/models/Architecture/double_doors.glb"},
+    { name: "Medieval Wall", image: "/assets/images/Architecture/medieval_wall_scan_01.PNG" , model: "/assets/models/Architecture/medieval_wall_scan_01.glb"},
+    { name: "Brick Textured Wall", image: "/assets/images/Architecture/stylized_brick_wall_texture_1.PNG" , model: "/assets/models/Architecture/stylized_brick_wall_texture_1.glb"},
+    { name: "Sheet Brick wall", image: "/assets/images/Architecture/free_stylized_trimsheet_brick_wall.PNG" , model: "/assets/models/Architecture/free_stylized_trimsheet_brick_wall.glb"},
+     
   ],
 };
 
