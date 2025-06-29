@@ -128,17 +128,31 @@ renderer.xr.addEventListener('sessionerror', (e) => {
         hitTestSourceRequested.current = true;
       }
 
-      if (hitTestSourceRef.current) {
-        const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
-        if (hitTestResults.length) {
-          const hit = hitTestResults[0];
-          const pose = hit.getPose(referenceSpace);
-          reticle.visible = true;
-          reticle.matrix.fromArray(pose.transform.matrix);
-        } else {
-          reticle.visible = false;
-        }
-      }
+    //   if (hitTestSourceRef.current) {
+    //     const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
+    //     if (hitTestResults.length) {
+    //       const hit = hitTestResults[0];
+    //       const pose = hit.getPose(referenceSpace);
+    //       reticle.visible = true;
+    //       reticle.matrix.fromArray(pose.transform.matrix);
+    //     } else {
+    //       reticle.visible = false;
+    //     }
+    //   }
+    if (hitTestSourceRef.current) {
+  const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
+  if (hitTestResults.length > 0) {
+    console.log("✅ Hit test succeeded");
+    const hit = hitTestResults[0];
+    const pose = hit.getPose(referenceSpace);
+    reticle.visible = true;
+    reticle.matrix.fromArray(pose.transform.matrix);
+  } else {
+    console.log("❌ Hit test returned nothing");
+    reticle.visible = false;
+  }
+}
+
     }
 
     // renderer.render(sceneRef.current, renderer.xr.getCamera());
