@@ -18,7 +18,7 @@ const ARMeasurementTool = () => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // const camera = new THREE.PerspectiveCamera(); //no need to use it, since WebXR handles the camera internally. You can safely remove it.
+    const camera = new THREE.PerspectiveCamera(); //no need to use it, since WebXR handles the camera internally. You can safely remove it.
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
