@@ -105,69 +105,50 @@ renderer.xr.addEventListener('sessionerror', (e) => {
   };
 
   const render = (timestamp, frame) => {
-    const renderer = rendererRef.current;
-    const reticle = reticleRef.current;
+  const renderer = rendererRef.current;
+  const reticle = reticleRef.current;
+  const scene = sceneRef.current;
 
-      if (!renderer || !renderer.xr.isPresenting || !sceneRef.current) return;
+  if (!renderer || !scene || !renderer.xr.isPresenting) return;
 
+  if (frame) {
+    const referenceSpace = renderer.xr.getReferenceSpace();
+    const session = renderer.xr.getSession();
 
-    if (frame) {
-      const referenceSpace = renderer.xr.getReferenceSpace();
-      const session = renderer.xr.getSession();
-
-      if (!hitTestSourceRequested.current) {
-        session.requestReferenceSpace('viewer').then(space => {
-          session.requestHitTestSource({ space }).then(source => {
-            hitTestSourceRef.current = source;
-          });
+    if (!hitTestSourceRequested.current) {
+      session.requestReferenceSpace('viewer').then(space => {
+        session.requestHitTestSource({ space }).then(source => {
+          hitTestSourceRef.current = source;
         });
-        session.addEventListener('end', () => {
-          hitTestSourceRequested.current = false;
-          hitTestSourceRef.current = null;
-        });
-        hitTestSourceRequested.current = true;
-      }
-
-    //   if (hitTestSourceRef.current) {
-    //     const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
-    //     if (hitTestResults.length) {
-    //       const hit = hitTestResults[0];
-    //       const pose = hit.getPose(referenceSpace);
-    //       reticle.visible = true;
-    //       reticle.matrix.fromArray(pose.transform.matrix);
-    //     } else {
-    //       reticle.visible = false;
-    //     }
-    //   }
-    if (hitTestSourceRef.current) {
-  const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
-  if (hitTestResults.length > 0) {
-    console.log("✅ Hit test succeeded");
-    const hit = hitTestResults[0];
-    const pose = hit.getPose(referenceSpace);
-    reticle.visible = true;
-    reticle.matrix.fromArray(pose.transform.matrix);
-  } else {
-    console.log("❌ Hit test returned nothing");
-    reticle.visible = false;
-  }
-}
-
+      });
+      session.addEventListener('end', () => {
+        hitTestSourceRequested.current = false;
+        hitTestSourceRef.current = null;
+      });
+      hitTestSourceRequested.current = true;
     }
 
-    // renderer.render(sceneRef.current, renderer.xr.getCamera());
-//     if (renderer && sceneRef.current && renderer.xr.isPresenting) {
-//   renderer.render(sceneRef.current, renderer.xr.getCamera());
-// }
-if (renderer && renderer.xr.isPresenting && sceneRef.current) {
+    if (hitTestSourceRef.current) {
+      const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
+      if (hitTestResults.length > 0) {
+        const hit = hitTestResults[0];
+        const pose = hit.getPose(referenceSpace);
+
+        reticle.visible = true;
+        reticle.matrix.fromArray(pose.transform.matrix);
+        reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
+      } else {
+        reticle.visible = false;
+      }
+    }
+  }
+
   const xrCamera = renderer.xr.getCamera?.();
   if (xrCamera) {
-    renderer.render(sceneRef.current, xrCamera);
+    renderer.render(scene, xrCamera);
   }
-}
+};
 
-
-  };
 
   return (
     <>
