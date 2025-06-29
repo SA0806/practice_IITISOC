@@ -44,7 +44,7 @@ const Homepage = () => {
       <li className="navigation">Contact Us</li>
     </ul>
   </nav> */}
-  <br />
+  
   <div className="H-typewriter">Welcome to Your Smart AR Home Designer</div>
   <div className="H-container">
     <div className="H-text">
