@@ -142,9 +142,16 @@ renderer.xr.addEventListener('sessionerror', (e) => {
     }
 
     // renderer.render(sceneRef.current, renderer.xr.getCamera());
-    if (renderer && sceneRef.current && renderer.xr.isPresenting) {
-  renderer.render(sceneRef.current, renderer.xr.getCamera());
+//     if (renderer && sceneRef.current && renderer.xr.isPresenting) {
+//   renderer.render(sceneRef.current, renderer.xr.getCamera());
+// }
+if (renderer && renderer.xr.isPresenting && sceneRef.current) {
+  const xrCamera = renderer.xr.getCamera?.();
+  if (xrCamera) {
+    renderer.render(sceneRef.current, xrCamera);
+  }
 }
+
 
   };
 
