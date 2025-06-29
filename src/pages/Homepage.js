@@ -27,6 +27,9 @@ const Homepage = () => {
   const handleStartDesigning = () => {
     navigate('/Dashboard');
   };
+  const handleARMeasurement = () => {
+    navigate('/ARMeasurementTool');
+  };
   const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -55,6 +58,8 @@ const Homepage = () => {
       <div className="H-cta">
         <p>Ready to Build Your Dream Home?</p>
         <button onClick= {handleStartDesigning}>Start Designing Now</button>
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <button onClick= {handleARMeasurement}>AR Measurement Tool</button>
       </div>
     </div>
     <img

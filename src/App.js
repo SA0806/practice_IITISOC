@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import ARView from './pages/ARView';
 import Homepage from './pages/Homepage';
 import { SelectedObjectsProvider } from './Context/SelectedObjectsContext';
+import ARMeasurementTool from './pages/ARMeasurementTool';
 console.log("✅ Bootstrap CSS loaded");
 
 
@@ -29,6 +30,8 @@ function App() {
         
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Dashboard/ARView" element={<ARView />} />
+        <Route path="/ARMeasurementTool" element={<ARMeasurementTool />} />
+
       </Routes>
       </SelectedObjectsProvider>
    
