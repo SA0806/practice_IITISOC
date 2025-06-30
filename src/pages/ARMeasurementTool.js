@@ -40,7 +40,6 @@ const ARMeasurementTool = () => {
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
 
-    // Reticle
     const reticle = new THREE.Mesh(
       new THREE.RingGeometry(0.05, 0.06, 32).rotateX(-Math.PI / 2),
       new THREE.MeshBasicMaterial({ color: 0x00ff00 })
@@ -56,7 +55,9 @@ const ARMeasurementTool = () => {
 
     renderer.setAnimationLoop(render);
 
-    resetBtnRef.current.onclick = reset;
+    if (resetBtnRef.current) {
+      resetBtnRef.current.onclick = reset;
+    }
 
     return () => {
       renderer.setAnimationLoop(null);
@@ -105,17 +106,17 @@ const ARMeasurementTool = () => {
     resetBtnRef.current.style.display = 'none';
   };
 
-  const render = (timestamp, frame) => {
+  const render = async (timestamp, frame) => {
     const renderer = rendererRef.current;
-    const reticle = reticleRef.current;
     const scene = sceneRef.current;
+    const reticle = reticleRef.current;
 
-    if (!renderer || !scene || !renderer.xr.isPresenting || !frame) return;
+    if (!renderer || !scene || !frame) return;
 
     const session = renderer.xr.getSession();
 
     if (!referenceSpaceRef.current) {
-      referenceSpaceRef.current = renderer.xr.getReferenceSpace();
+      referenceSpaceRef.current = await renderer.xr.getReferenceSpace();
     }
 
     if (!hitTestSourceRequested.current) {
@@ -144,6 +145,7 @@ const ARMeasurementTool = () => {
           reticle.visible = true;
           reticle.matrix.fromArray(pose.transform.matrix);
           reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
+          console.log("✅ Reticle positioned");
         }
       } else {
         reticle.visible = false;
