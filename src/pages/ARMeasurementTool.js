@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import './ARMeasurementTool.css';
@@ -14,6 +14,9 @@ const ARMeasurementTool = () => {
   const hitTestSourceRef = useRef(null);
   const referenceSpaceRef = useRef();
   const cameraRef = useRef();
+  const arButtonRef = useRef();
+
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -29,13 +32,16 @@ const ARMeasurementTool = () => {
     document.body.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    document.body.appendChild(
-      ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] })
-    );
+    // ✅ Track AR button for cleanup
+    const arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
+    document.body.appendChild(arButton);
+    arButtonRef.current = arButton;
 
+    // Lighting
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
 
+    // Reticle
     const reticle = new THREE.Mesh(
       new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
       new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide })
@@ -56,8 +62,6 @@ const ARMeasurementTool = () => {
     }
 
     renderer.xr.addEventListener('sessionstart', async () => {
-      console.log("✅ AR session started");
-
       const session = renderer.xr.getSession();
       referenceSpaceRef.current = await session.requestReferenceSpace('local');
       const viewerSpace = await session.requestReferenceSpace('viewer');
@@ -72,7 +76,12 @@ const ARMeasurementTool = () => {
     return () => {
       renderer.setAnimationLoop(null);
       renderer.dispose();
-      document.body.removeChild(renderer.domElement);
+      if (renderer.domElement?.parentElement) {
+        renderer.domElement.parentElement.removeChild(renderer.domElement);
+      }
+      if (arButtonRef.current?.parentElement) {
+        arButtonRef.current.parentElement.removeChild(arButtonRef.current);
+      }
     };
   }, []);
 
@@ -101,8 +110,9 @@ const ARMeasurementTool = () => {
 
       resetBtnRef.current.style.display = 'block';
 
-      // This is the alert box 
-     alert("Distance updated");
+      // ✅ Show a toast instead of alert
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
     }
   };
 
@@ -131,12 +141,10 @@ const ARMeasurementTool = () => {
       if (hitTestResults.length > 0) {
         const hit = hitTestResults[0];
         const pose = hit.getPose(referenceSpaceRef.current);
-
         if (pose) {
           reticle.visible = true;
           reticle.matrix.fromArray(pose.transform.matrix);
           reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
-          console.log("✅ Reticle positioned");
         }
       } else {
         reticle.visible = false;
@@ -151,8 +159,30 @@ const ARMeasurementTool = () => {
     <>
       <div id="label" ref={labelRef}>Tap two points to measure</div>
       <button id="resetBtn" ref={resetBtnRef} style={{ display: 'none' }}>Reset</button>
+
+      {showToast && (
+        <div style={styles.toast}>
+          ✅ Distance measured and updated!
+        </div>
+      )}
     </>
   );
+};
+
+const styles = {
+  toast: {
+    position: 'fixed',
+    bottom: '60px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: '#333',
+    color: '#fff',
+    padding: '12px 20px',
+    borderRadius: '8px',
+    fontSize: '16px',
+    zIndex: 1000,
+    boxShadow: '0px 4px 12px rgba(0,0,0,0.25)',
+  }
 };
 
 export default ARMeasurementTool;
