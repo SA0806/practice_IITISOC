@@ -12,12 +12,16 @@ const ARMeasurementTool = () => {
   const lineRef = useRef();
   const reticleRef = useRef();
   const hitTestSourceRef = useRef(null);
-  const hitTestSourceRequested = useRef(false);
   const referenceSpaceRef = useRef();
+  const cameraRef = useRef();
 
   useEffect(() => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
+
+    const camera = new THREE.PerspectiveCamera();
+    scene.add(camera);
+    cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -29,20 +33,12 @@ const ARMeasurementTool = () => {
       ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] })
     );
 
-    renderer.xr.addEventListener('sessionstart', () => {
-      console.log("✅ AR session started");
-    });
-
-    renderer.xr.addEventListener('sessionerror', (e) => {
-      console.error("❌ AR session failed:", e);
-    });
-
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
 
     const reticle = new THREE.Mesh(
-      new THREE.RingGeometry(0.05, 0.06, 32).rotateX(-Math.PI / 2),
-      new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+      new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
+      new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide })
     );
     reticle.matrixAutoUpdate = false;
     reticle.visible = false;
@@ -58,6 +54,20 @@ const ARMeasurementTool = () => {
     if (resetBtnRef.current) {
       resetBtnRef.current.onclick = reset;
     }
+
+    renderer.xr.addEventListener('sessionstart', async () => {
+      console.log("✅ AR session started");
+
+      const session = renderer.xr.getSession();
+      referenceSpaceRef.current = await session.requestReferenceSpace('local');
+      const viewerSpace = await session.requestReferenceSpace('viewer');
+      hitTestSourceRef.current = await session.requestHitTestSource({ space: viewerSpace });
+
+      session.addEventListener('end', () => {
+        referenceSpaceRef.current = null;
+        hitTestSourceRef.current = null;
+      });
+    });
 
     return () => {
       renderer.setAnimationLoop(null);
@@ -106,34 +116,12 @@ const ARMeasurementTool = () => {
     resetBtnRef.current.style.display = 'none';
   };
 
-  const render = async (timestamp, frame) => {
+  const render = (timestamp, frame) => {
     const renderer = rendererRef.current;
     const scene = sceneRef.current;
     const reticle = reticleRef.current;
 
     if (!renderer || !scene || !frame) return;
-
-    const session = renderer.xr.getSession();
-
-    if (!referenceSpaceRef.current) {
-      referenceSpaceRef.current = await renderer.xr.getReferenceSpace();
-    }
-
-    if (!hitTestSourceRequested.current) {
-      session.requestReferenceSpace('viewer').then(viewerSpace => {
-        session.requestHitTestSource({ space: viewerSpace }).then(source => {
-          hitTestSourceRef.current = source;
-        });
-      });
-
-      session.addEventListener('end', () => {
-        hitTestSourceRequested.current = false;
-        hitTestSourceRef.current = null;
-        referenceSpaceRef.current = null;
-      });
-
-      hitTestSourceRequested.current = true;
-    }
 
     if (hitTestSourceRef.current && referenceSpaceRef.current) {
       const hitTestResults = frame.getHitTestResults(hitTestSourceRef.current);
@@ -152,16 +140,14 @@ const ARMeasurementTool = () => {
       }
     }
 
-    const xrCamera = renderer.xr.getCamera?.();
-    if (xrCamera) {
-      renderer.render(scene, xrCamera);
-    }
+    const xrCamera = renderer.xr.getCamera?.() || cameraRef.current;
+    renderer.render(scene, xrCamera);
   };
 
   return (
     <>
       <div id="label" ref={labelRef}>Tap two points to measure</div>
-      <button id="resetBtn" ref={resetBtnRef}>Reset</button>
+      <button id="resetBtn" ref={resetBtnRef} style={{ display: 'none' }}>Reset</button>
     </>
   );
 };
