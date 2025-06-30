@@ -100,9 +100,7 @@ const ARMeasurementTool = () => {
       lineRef.current = line;
 
       resetBtnRef.current.style.display = 'block';
-
-      // This is the alert box 
-     alert("Distance updated");
+      
     }
   };
 

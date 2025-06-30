@@ -243,6 +243,7 @@
   margin-top: 10px;
   font-family: "Lucida Sans", Geneva, Verdana, sans-serif;
   transition: all 0.3s ease;
+  margin: 10px;
 }
 .H-cta button:hover {
   background-color: brown;
