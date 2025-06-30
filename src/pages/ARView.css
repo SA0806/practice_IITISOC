@@ -231,3 +231,13 @@
 .ui-controls input[type="range"] {
   width: 100%;
 }
+model-viewer::part(ar-button) {
+  width: 80px !important;
+  height: 80px !important;
+  bottom: 24px !important; /* adjust spacing from bottom */
+  right: 24px !important;
+  border-radius: 50% !important;
+  background-color: white; /* optional for visibility */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* optional */
+}
+
