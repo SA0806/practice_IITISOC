@@ -44,7 +44,7 @@ export default function ModelViewerAR({
           color: '#fff',
           border: 'none',
           borderRadius: '8px',
-          fontSize: '16px',
+          fontSize: '40px',
           cursor: 'pointer',
           zIndex: 10
         }}>
