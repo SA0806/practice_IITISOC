@@ -36,15 +36,17 @@ export default function ModelViewerAR({
       >
         <button slot="ar-button" style={{
           position: 'absolute',
-          bottom: '16px',
+          bottom: '24px',
           left: '50%',
           transform: 'translateX(-50%)',
-          padding: '12px 24px',
+          padding: '16px 32px',
           background: '#000',
           color: '#fff',
           border: 'none',
-          borderRadius: '8px',
-          fontSize: '40px',
+          borderRadius: '12px',
+          fontSize: '20px',
+          fontWeight: 'bold',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
           cursor: 'pointer',
           zIndex: 10
         }}>
