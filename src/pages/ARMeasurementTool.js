@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import './ARMeasurementTool.css';
@@ -16,8 +16,6 @@ const ARMeasurementTool = () => {
   const cameraRef = useRef();
   const arButtonRef = useRef();
 
-  const [showToast, setShowToast] = useState(false);
-
   useEffect(() => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
@@ -32,16 +30,13 @@ const ARMeasurementTool = () => {
     document.body.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // ✅ Track AR button for cleanup
     const arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
     document.body.appendChild(arButton);
     arButtonRef.current = arButton;
 
-    // Lighting
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
 
-    // Reticle
     const reticle = new THREE.Mesh(
       new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
       new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide })
@@ -110,9 +105,8 @@ const ARMeasurementTool = () => {
 
       resetBtnRef.current.style.display = 'block';
 
-      // ✅ Show a toast instead of alert
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      // ✅ Native alert box
+      alert("✅ Distance measured and updated!");
     }
   };
 
@@ -159,30 +153,8 @@ const ARMeasurementTool = () => {
     <>
       <div id="label" ref={labelRef}>Tap two points to measure</div>
       <button id="resetBtn" ref={resetBtnRef} style={{ display: 'none' }}>Reset</button>
-
-      {showToast && (
-        <div style={styles.toast}>
-          ✅ Distance measured and updated!
-        </div>
-      )}
     </>
   );
-};
-
-const styles = {
-  toast: {
-    position: 'fixed',
-    bottom: '60px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: '#333',
-    color: '#fff',
-    padding: '12px 20px',
-    borderRadius: '8px',
-    fontSize: '16px',
-    zIndex: 1000,
-    boxShadow: '0px 4px 12px rgba(0,0,0,0.25)',
-  }
 };
 
 export default ARMeasurementTool;
