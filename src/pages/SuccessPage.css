@@ -1,0 +1,82 @@
+/* Fullscreen layout */
+.success-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background: #f5f7fa;
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Loading */
+.loading {
+  font-size: 1.8rem;
+  color: #555;
+}
+
+/* Success */
+.success {
+  color: #2ecc71;
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.thankyou {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.session-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.session-box {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  overflow-x: auto;
+  max-width: 90%;
+  max-height: 40vh;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Error */
+.error {
+  color: #e74c3c;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.error-msg {
+  color: #c0392b;
+  font-size: 1.1rem;
+}
+.dashboard-btn {
+  margin-top: 20px;
+  background-color: #362e85;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.dashboard-btn:hover {
+  background-color: #292367;
+}
+.back-to-dashboard-arrow{
+    font-size: 1.2rem;
+}

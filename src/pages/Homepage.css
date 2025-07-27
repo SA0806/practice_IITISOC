@@ -252,9 +252,9 @@
   transform: scale(1.05);
 }
 
-span {
+/* span {
   color: rgb(246, 177, 49);
-}
+} */
 html {
   scroll-behavior: smooth;
 }

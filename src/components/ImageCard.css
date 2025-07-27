@@ -11,6 +11,8 @@
   cursor: pointer;
   text-align: center;
   margin-top: 6px;
+  margin-left: 6px;
+  margin-right: 6px;
 }
 
 .image-card:hover {
@@ -35,9 +37,83 @@
   font-size: 14px;
   font-weight: 500;
   margin: 0;
+  /* margin-bottom: 10px; */
+}
+.card-text-holder{
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  height: 2rem;
+  margin-bottom: 10px;
 }
 
 .image-card.selected {
   border: 2px solid #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+/* .buy-now-btn {
+  display: inline-block;
+  margin-top: 8px;
+  background-color: #111;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.buy-now-btn:hover {
+  background-color: #444;
+} */
+.card-price {
+  font-size: 14px;
+  color: #464646;
+  margin: 4px 0;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.add-to-cart-btn,
+.buy-now-btn {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+
+}
+
+.add-to-cart-btn {
+  background-color: #ffd500;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  font-family: "Segoe UI", sans-serif;
+  padding: 2px;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #ffc400;
+}
+
+.buy-now-btn {
+  background-color: #9b4646;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: "Segoe UI", sans-serif;
+  padding: 2px;
+}
+
+.buy-now-btn:hover {
+  background-color: #893636;
 }

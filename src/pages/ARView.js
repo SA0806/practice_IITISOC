@@ -4,14 +4,19 @@ import React, { useState } from 'react';
 import ModelViewerAR from '../components/ModelViewerAR';
 import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 import SelectedItemsBar from '../components/SelectedItemsBar';
+import CartIcon from '../components/CartIcon';
+import CartPanel from '../components/CartPanel';
 
 const ARViewModelViewer = () => {
   const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
   const [activeModel, setActiveModel] = useState(selectedObjects[0]?.model || null);
+   const [cartOpen, setCartOpen] = useState(false);
 
   return (
     <div>
       {/* Top bar to show selected items */}
+      <CartIcon onClick={() => setCartOpen((prev) => !prev)} />
+      <CartPanel visible={cartOpen} onClose={() => setCartOpen(false)} />
       <div className="top-bar">
         <SelectedItemsBar 
           selectedObjects={selectedObjects}
