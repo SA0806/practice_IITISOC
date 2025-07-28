@@ -25,6 +25,8 @@
 @media (max-width: 768px) {
     .login-button{
         margin-top: 1px;
-        padding-top: 0px;
+        /* padding-top: 0px; */
+        padding-top: 3px;
+        padding-bottom:3px;
     }
 }
