@@ -3,6 +3,7 @@ import './Homepage.css';
 import { useNavigate } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // Import AOS styles
+import LoginButton from '../components/LoginButton';
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -36,7 +37,13 @@ const Homepage = () => {
 
   return (
     <div className="Homepage">
+      
       <header>
+        <div className="Homepage-login-button">
+        <LoginButton />
+        </div>
+        
+        
   <h1>
     <i className="fas fa-cube" ></i> AR <span>House</span> Design
   </h1>

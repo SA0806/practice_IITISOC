@@ -32,7 +32,8 @@
   -webkit-text-fill-color: transparent;
   margin-block-end: 0.4em;
   font-weight: bold;
-  padding-top: 4%;
+  /* padding-top: 4%; */
+  margin-top: 0%;
   padding-bottom: 3%;
 }
 
@@ -355,3 +356,18 @@ html {
     height: 8px;
   }
 }
+/* .Homepage-login-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+} */
+
+.Homepage-login-button {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px;
+  margin-bottom: 0%;
+  padding-bottom: 0%;
+}
+
