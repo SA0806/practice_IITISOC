@@ -149,12 +149,25 @@ const ARMeasurementTool = () => {
     renderer.render(scene, xrCamera);
   };
 
+  // return (
+  //   <>
+  //     <div id="label" ref={labelRef}>Tap two points to measure</div>
+  //     <button id="resetBtn" ref={resetBtnRef} style={{ display: 'none' }}>Reset</button>
+  //   </>
+  // );
+
+
   return (
-    <>
-      <div id="label" ref={labelRef}>Tap two points to measure</div>
-      <button id="resetBtn" ref={resetBtnRef} style={{ display: 'none' }}>Reset</button>
-    </>
-  );
+  <>
+    <div className="measurement-label" ref={labelRef}>
+      Tap two points to measure
+    </div>
+    <button className="reset-button" ref={resetBtnRef} style={{ display: 'none' }}>
+      🔁 Reset Measurement
+    </button>
+  </>
+);
+
 };
 
 export default ARMeasurementTool;

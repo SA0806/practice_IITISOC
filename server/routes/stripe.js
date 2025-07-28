@@ -30,9 +30,12 @@ router.post("/create-checkout-session", async (req, res) => {
         },
         quantity: item.quantity || 1, // fallback to 1 if undefined
       })),
+      // metadata: {
+      //   items: JSON.stringify(cartItems), // pass to webhook later if needed
+      // }
       metadata: {
-        items: JSON.stringify(cartItems), // pass to webhook later if needed
-      },
+  items: cartItems.map(item => `${item.name} x${item.quantity}`).join(', ')
+},
       success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "http://localhost:3000/cancel",
     });

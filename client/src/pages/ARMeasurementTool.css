@@ -56,3 +56,89 @@ canvas {
 }
 
 
+/* Measurement Label */
+.measurement-label {
+  position: absolute;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(33, 33, 33, 0.9);
+  color: #ffffff;
+  padding: 12px 24px;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: fadeInUp 0.4s ease;
+}
+
+/* Reset Button */
+.reset-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Segoe UI", sans-serif;
+  z-index: 10;
+  background: linear-gradient(135deg, #f44336, #e91e63);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.reset-button:hover {
+  background: linear-gradient(135deg, #e53935, #d81b60);
+  transform: scale(1.05);
+}
+
+/* Fullscreen Canvas Styling */
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0;
+}
+
+/* Custom ARButton */
+#ARButton, .xr-button {
+  position: fixed !important;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #f6b131, #ff9900) !important;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease-in-out;
+  z-index: 9999;
+}
+
+#ARButton:hover, .xr-button:hover {
+  background: linear-gradient(90deg, #ffcc00, #ff0000);
+  cursor: pointer;
+}
+
+/* Simple Fade Up Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) translateX(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}
