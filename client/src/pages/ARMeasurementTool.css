@@ -34,7 +34,7 @@ canvas {
   height: 100vh !important;
   z-index: 0;
 }
-/* #ARButton, .xr-button {
+#ARButton, .xr-button {
   position: fixed !important;
   bottom: 20px;
   padding: 14px 28px;
@@ -53,7 +53,7 @@ canvas {
 #ARButton:hover, .xr-button:hover {
   background: linear-gradient(90deg, #ffcc00, #ff0000);
   cursor: pointer;
-} */
+}
 
 
 /* Measurement Label */
@@ -109,7 +109,7 @@ canvas {
 }
 
 /* Custom ARButton */
-#ARButton, .xr-button {
+/* #ARButton, .xr-button {
   position: fixed !important;
   bottom: 20px;
   left: 50%;
@@ -130,7 +130,7 @@ canvas {
 #ARButton:hover, .xr-button:hover {
   background: linear-gradient(90deg, #ffcc00, #ff0000);
   cursor: pointer;
-}
+} */
 
 /* Simple Fade Up Animation */
 @keyframes fadeInUp {
