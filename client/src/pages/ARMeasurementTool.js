@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState  } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 import './ARMeasurementTool.css';
+
 
 const ARMeasurementTool = () => {
   const labelRef = useRef();
@@ -16,40 +17,7 @@ const ARMeasurementTool = () => {
   const cameraRef = useRef();
   const arButtonRef = useRef();
 
-   const vantaRef = useRef();
-  const [vantaEffect, setVantaEffect] = useState(null);
-
-  
-
   useEffect(() => {
-
-     // Load Vanta background
-    const loadVanta = async () => {
-      const VANTA = await import('vanta/dist/vanta.waves.min');
-      if (!vantaEffect && vantaRef.current) {
-        setVantaEffect(
-          VANTA.default({
-            el: vantaRef.current,
-            THREE: THREE,
-            mouseControls: false,
-            touchControls: false,
-            gyroControls: false,
-            minHeight: 200.0,
-            minWidth: 200.0,
-            scale: 1.0,
-            scaleMobile: 1.0,
-            color: 0x0033cc,
-            shininess: 50,
-            waveSpeed: 0.5,
-            zoom: 1.2,
-          })
-        );
-      }
-    };
-    loadVanta();
-
-
-
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
@@ -110,12 +78,8 @@ const ARMeasurementTool = () => {
       if (arButtonRef.current?.parentElement) {
         arButtonRef.current.parentElement.removeChild(arButtonRef.current);
       }
-       if (vantaEffect) {
-        vantaEffect.destroy();
-        setVantaEffect(null);
-      }
     };
-  }, [vantaEffect]);
+  }, []);
 
   const onSelect = () => {
     const reticle = reticleRef.current;
@@ -196,14 +160,12 @@ const ARMeasurementTool = () => {
 
   return (
   <>
-   <div ref={vantaRef} className="vanta-bg">
     <div className="measurement-label" ref={labelRef}>
       Tap two points to measure
     </div>
     <button className="reset-button" ref={resetBtnRef} style={{ display: 'none' }}>
       🔁 Reset Measurement
     </button>
-    </div>
   </>
 );
 

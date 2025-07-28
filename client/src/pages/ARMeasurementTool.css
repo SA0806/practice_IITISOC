@@ -41,6 +41,7 @@ canvas {
   font-size: 18px;
   font-weight: bold;
   background: linear-gradient(90deg, #f6b131, #ff9900) !important;
+  opacity: 1 !important;
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -106,7 +107,8 @@ canvas {
   width: 100vw !important;
   height: 100vh !important;
   z-index: 0;
-  background-color: #9bbded;
+  /* background:none; */
+  background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
 }
 
 /* Custom ARButton */
@@ -144,7 +146,7 @@ canvas {
     transform: translateY(0) translateX(-50%);
   }
 }
-.vanta-bg {
+/* .vanta-bg {
   position: fixed;
   top: 0;
   left: 0;
@@ -152,4 +154,51 @@ canvas {
   height: 100vh;
   z-index: -1;
   overflow: hidden;
+} */
+
+/* Extra Info Panel Styling */
+/* .info-panel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px 24px;
+  border-radius: 12px;
+  max-width: 300px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.info-panel .title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #111;
+}
+
+.info-panel .subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.info-panel .instructions {
+  list-style: none;
+  padding-left: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.info-panel .instructions li {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+} */
+.vanta-side {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 20vw;
+  z-index: -1;
 }
