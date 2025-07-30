@@ -68,6 +68,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
                   selected={selectedObjects.some((obj) => obj.name === item.name)}
                   onClick={() => toggleObjectSelection(item)}
                   category={item.category}
+                  // compact={false}
                 />
               ))}
             </div>

@@ -6,8 +6,12 @@ import { FaArrowsAlt, FaUndo, FaClone, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import ImageCard from "../components/ImageCard";
 import "./TwoDimensionalViewPage.css";
+import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 
 function TwoDimensionalViewPage() {
+
+    const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
+    
 
     const variants = [
   { color: "navy", label: "Dark Blue" },
@@ -37,7 +41,7 @@ function TwoDimensionalViewPage() {
             selected={true}
             category={obj.category}
             price={obj.price}
-            compact={false} 
+            compact={true} 
           />
         ))}
 

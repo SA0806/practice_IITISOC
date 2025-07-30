@@ -6,13 +6,14 @@
 }
 
 .TwoDimensionalViewPage-left-sidebar {
-  width: 18vw;
+  width: 14vw;
   background-color: #1e1e1e;
   color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
+  overflow-y: auto;
 }
 
 .TwoDimensionalViewPage-right-sidebar {
@@ -64,4 +65,29 @@
   font-size: 1rem;
   color: #fff;
   text-align: center;
+}
+
+/* Optional: Style for ImageCard */
+/* .image-card {
+  margin: 10px 0;
+  text-align: center;
+} */
+
+/* .image-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+} */
+
+/* .image-card-name {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #000;
+} */
+.card-text{
+  color: #000;
+}
+.image-card img{
+  /* margin-bottom: 10px; */
+  height:100px;
 }
