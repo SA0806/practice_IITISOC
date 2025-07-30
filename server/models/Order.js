@@ -10,6 +10,7 @@ const itemSchema = new mongoose.Schema({
   total: Number,
 });
 
+
 const orderSchema = new mongoose.Schema({
   sessionId: String,
   customerEmail: String,

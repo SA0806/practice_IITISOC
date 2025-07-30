@@ -10,6 +10,11 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from "./pages/CheckoutPage"; 
 import { CartProvider } from "./Context/CartContext";
 import SuccessPage from './pages/SuccessPage';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import 'react-toastify/dist/ReactToastify.css';
+// import TwoDimensionalViewPage from './pages/2DViewPage';
+import TwoDimensionalViewPage from './pages/TwoDimensionalViewPage';
 
 console.log("✅ Bootstrap CSS loaded");
 
@@ -40,6 +45,13 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/success" element={<SuccessPage />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/Dashboard/TwoDimensionalViewPage" element={<TwoDimensionalViewPage />} />
+
+
+
+
 
       </Routes>
       </CartProvider>

@@ -101,16 +101,16 @@ canvas {
 }
 
 /* Fullscreen Canvas Styling */
-canvas {
+/* canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw !important;
   height: 100vh !important;
   z-index: 0;
-  /* background:none; */
+  
   background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
-}
+} */
 
 /* Custom ARButton */
 /* #ARButton, .xr-button {

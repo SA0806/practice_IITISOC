@@ -10,6 +10,7 @@ import ARButton from '../components/ARButton';
 import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 import CartIcon from '../components/CartIcon';
 import CartPanel from '../components/CartPanel';
+import TwoDimensionalViewButton from '../components/2DView';
 
 const Dashboard = () => {
   const [cartOpen, setCartOpen] = useState(false);
@@ -43,9 +44,11 @@ const Dashboard = () => {
       {/* AR Button */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
         <ARButton selectedObjects={selectedObjects} />
+        <TwoDimensionalViewButton selectedObjects={selectedObjects}/>
       </div>
     </div>
   );
 };
 
 export default Dashboard;
+

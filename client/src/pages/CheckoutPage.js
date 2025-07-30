@@ -5,15 +5,17 @@ import './CheckoutPage.css';
 
 
 const CheckoutPage = () => {
-  const { cartItems } = useContext(CartContext);
+  const { cart } = useContext(CartContext);
+  
   const location = useLocation();
   const buyNowItem = location.state?.item;
 
-  const itemsToCheckout = buyNowItem ? [buyNowItem] : cartItems;
+  // const itemsToCheckout = buyNowItem ? [buyNowItem] : cartItems;
+  const itemsToCheckout = buyNowItem ? [buyNowItem] : cart;
 
   const handleCheckout = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/create-checkout-session", {
+      const response = await fetch("http://localhost:5000/api/stripe/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

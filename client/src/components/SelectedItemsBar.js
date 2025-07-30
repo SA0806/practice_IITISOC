@@ -24,6 +24,7 @@ const SelectedItemsBar = ({ selectedObjects, toggleObjectSelection }) => {
             selected={true}
             category={obj.category}
             price={obj.price}
+            compact={false} 
           />
         ))}
       </div>

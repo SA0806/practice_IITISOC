@@ -60,6 +60,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
                   // id={`${item.name}-${index}`}
                    id={`${item.name}-${item.category}`}
                   key={`${category.toLowerCase()}-${index}`}
+                  
                   name={item.name}
                   image={item.image}
                   // buyLink={item.buyLink}

@@ -24,7 +24,7 @@ const SuccessPage = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/api/verify-payment/${sessionId}`)
+    fetch(`http://localhost:5000/api/stripe/verify-payment/${sessionId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.paid) {

@@ -1,11 +1,11 @@
 // src/components/CartPanel.js
-import React, { useContext, useRef } from 'react';
-import { CartContext } from '../Context/CartContext';
+import React, { useRef } from 'react';
+import { useCart } from '../Context/CartContext';
 import './CartStyles.css';
 import { useNavigate } from 'react-router-dom';
 
 const CartPanel = ({ visible, onClose }) => {
-  const { cartItems, removeFromCart } = useContext(CartContext);
+  const { cart, removeFromCart } = useCart();
   const panelRef = useRef(null);
   const navigate = useNavigate();
 
@@ -18,10 +18,10 @@ const CartPanel = ({ visible, onClose }) => {
     <div ref={panelRef} className={`cart-panel ${visible ? 'open' : ''}`}>
       <h3 className="cart-heading">Your Cart</h3>
       <ul className="cart-items-list">
-        {cartItems.length === 0 ? (
+        {cart.length === 0 ? (
           <p className="cart-warning">Oops! Your Cart is empty. <br /> Shop now and enjoy the latest range of products...</p>
         ) : (
-          cartItems.map((item, index) => (
+          cart.map((item, index) => (
             <li key={index} className="cart-item">
               <img src={item.image} alt={item.name} className="cart-item-img" />
               <div className="cart-item-info">
@@ -36,7 +36,7 @@ const CartPanel = ({ visible, onClose }) => {
       </ul>
 
       {/* ✅ Checkout Button */}
-      {cartItems.length > 0 && (
+      {cart.length > 0 && (
         <div className="checkout-btn-wrapper">
           <button className="checkout-btn" onClick={handleCheckout}>
             Proceed to Checkout

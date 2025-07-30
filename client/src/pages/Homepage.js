@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Homepage.css';
 import { useNavigate } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // Import AOS styles
 import LoginButton from '../components/LoginButton';
+import { useCart } from "../Context/CartContext";
 
 const Homepage = () => {
+  const { cart } = useCart();
+  const [username, setUsername] = useState('');
   const navigate = useNavigate();
     useEffect(() => {
     AOS.init({ duration: 1000 }); // Optional: animation duration
@@ -35,18 +38,28 @@ const Homepage = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+  useEffect(() => {
+    // Get username from localStorage if logged in
+    const name = localStorage.getItem('loggedInUser');
+    if (name) setUsername(name);
+  }, []);
+
   return (
     <div className="Homepage">
       
       <header>
         <div className="Homepage-login-button">
-        <LoginButton />
+          <LoginButton />
         </div>
-        
-        
-  <h1>
-    <i className="fas fa-cube" ></i> AR <span>House</span> Design
-  </h1>
+        <h1>
+          <i className="fas fa-cube"></i> AR <span>House</span> Design
+        </h1>
+        {/* Show username if logged in */}
+        {username && (
+          <div style={{ textAlign: 'right', color: '#f6b131', fontSize: '20px', marginRight: '30px' }}>
+            Welcome, {username}!
+          </div>
+        )}
   {/* <nav>
     <ul>
       <li className="navigation">Platform</li>
@@ -171,6 +184,16 @@ const Homepage = () => {
     <br />
     <br />
   </div>
+  <div>
+      <h3>Your Cart:</h3>
+      <ul>
+        {cart.map((item, idx) => (
+          <li key={idx}>
+            Product: {item.productId} | Quantity: {item.quantity}
+          </li>
+        ))}
+      </ul>
+    </div>
   <button onClick={scrollToTop} id="scrollTopBtn" title="Go to top">↑</button>
 
 </header>

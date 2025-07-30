@@ -1,21 +1,30 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 
 import stripeRoute from './routes/stripe.js';
 import productRoutes from './routes/productRoutes.js';
-
+import AuthRouter from './routes/AuthRouter.js';
+import ProductRouter from './routes/ProductRouter.js';
+// import CartRouter from './routes/CartRouter.js';
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// ✅ Middleware
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(bodyParser.json());
 app.use(express.json());
 
-// ✅ Connect to checkoutDB (for Stripe etc.)
+// ✅ Health check
+app.get('/ping', (req, res) => {
+  res.send('PONG');
+});
+
+// ✅ DB Connections
 const checkoutConnection = mongoose.createConnection(process.env.CHECKOUT_DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -27,7 +36,6 @@ checkoutConnection.on('error', (err) => {
   console.error('❌ Error connecting to checkoutDB:', err);
 });
 
-// ✅ Connect to AR_House_Design DB (for furniture/products)
 const arDesignConnection = mongoose.createConnection(process.env.AR_HOUSE_DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -39,8 +47,17 @@ arDesignConnection.on('error', (err) => {
   console.error('❌ Error connecting to AR_House_Design DB:', err);
 });
 
-// Pass connections to routes if needed
-app.use('/api', (req, res, next) => {
+mongoose.connect(process.env.MONGO_CONN, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('✅ Connected to shared users/auth DB');
+}).catch(err => {
+  console.error('❌ Error connecting to shared DB:', err);
+});
+
+// ✅ Route middleware with DB injection
+app.use('/api/stripe', (req, res, next) => {
   req.checkoutDB = checkoutConnection;
   next();
 }, stripeRoute);
@@ -50,7 +67,19 @@ app.use('/api/products', (req, res, next) => {
   next();
 }, productRoutes);
 
-// Start server
+// ✅ Auth and product routes (uses shared DB via mongoose)
+app.use('/auth', AuthRouter);
+app.use('/products', ProductRouter);
+// app.use('/cart', CartRouter);
+
+// ✅ Global error handler
+app.use((err, req, res, next) => {
+  console.error('❌ Server Error:', err.stack);
+  res.status(500).json({ error: 'Internal Server Error', message: err.message });
+});
+
+// ✅ Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
+

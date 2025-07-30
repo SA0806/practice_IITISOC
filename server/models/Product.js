@@ -7,5 +7,6 @@ const productSchema = new mongoose.Schema({
   price: Number
 });
 
-
-export default productSchema;
+// Register and export the model
+const ProductModel = mongoose.model("products", productSchema);
+export default ProductModel;
