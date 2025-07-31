@@ -1,78 +1,176 @@
-import React from "react";
-// import LeftSidebar from "./components/LeftSidebar";
-// import RightSidebar from "./components/RightSidebar";
+import React, { useState } from "react";
 import CanvasArea from "../components/CanvasArea";
-import { FaArrowsAlt, FaUndo, FaClone, FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import ImageCard from "../components/ImageCard";
 import "./TwoDimensionalViewPage.css";
-import { useSelectedObjects } from '../Context/SelectedObjectsContext';
+import { useSelectedObjects } from "../Context/SelectedObjectsContext";
 
 function TwoDimensionalViewPage() {
+  const { selectedObjects } = useSelectedObjects();
+  const [furnitureList, setFurnitureList] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
-    const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
-    
+  const handleUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    const variants = [
-  { color: "navy", label: "Dark Blue" },
-  { color: "gray", label: "Gray" },
-  { color: "#c5c5b5", label: "Beige" },
-]; 
+    const imageUrl = URL.createObjectURL(file);
+    const newItem = {
+      name: file.name,
+      image: imageUrl,
+      scale: 1,
+      rotation: 0,
+    };
+    setFurnitureList((prev) => [...prev, newItem]);
+  };
+
+  const handleSave = () => {
+    const canvas = document.querySelector("canvas");
+    const link = document.createElement("a");
+    canvas.toBlob((blob) => {
+      link.href = URL.createObjectURL(blob);
+      link.download = "room-design.png";
+      link.click();
+    });
+  };
+
+  const updateSelected = (updates) => {
+    if (selectedIndex === null) return;
+    setFurnitureList((prevList) =>
+      prevList.map((item, i) =>
+        i === selectedIndex ? { ...item, ...updates } : item
+      )
+    );
+  };
+
+  const handleShare = () => {
+    if (selectedIndex === null) return;
+    const item = furnitureList[selectedIndex];
+    alert(`Sharing: ${item.name}`);
+  };
+
+  const handleImageCardClick = (obj) => {
+    if (!obj || !obj.model) {
+      alert("Model URL is missing.");
+      return;
+    }
+
+    window.selectedModel = obj.model;
+
+    const newItem = {
+      url: obj.model,
+      name: obj.name,
+      image: obj.image,
+      position: [0, 0, 0],
+      scale: 0.5,
+      rotation: 0,
+    };
+
+    setFurnitureList((prev) => [...prev, newItem]);
+    setSelectedIndex(furnitureList.length);
+  };
+
+  const bg = furnitureList[0]?.image || null;
+
   return (
     <div className="TwoDimensionalViewPage-container">
-       <div className="TwoDimensionalViewPage-left-sidebar">
+      <div className="TwoDimensionalViewPage-left-sidebar">
+        <div className="upload-section">
+          <label htmlFor="upload-input" className="circle-button" title="Upload Image">
+            <FaPlus />
+          </label>
+          <input
+            id="upload-input"
+            type="file"
+            accept="image/*"
+            onChange={handleUpload}
+            style={{ display: "none" }}
+          />
+          <p className="upload-label">Upload Image</p>
+        </div>
 
-        {/* Plus Button + Label */}
-      <div className="upload-section">
-        <button className="circle-button" title="Upload Image">
-          <FaPlus />
-        </button>
-        <p className="upload-label">Upload Image</p>
-      </div>
-      {selectedObjects.map((obj,index) => (
+        {selectedObjects.map((obj, index) => (
           <ImageCard
-            // key={obj.name}
-            // id={`${obj.name}-${index}`}
-             id={`${obj.name}-${obj.category}`}
             key={`${obj.category.toLowerCase()}-${index}`}
+            id={`${obj.name}-${obj.category}`}
             name={obj.name}
             image={obj.image}
-            // onClick={() => toggleObjectSelection(obj)}
             selected={true}
             category={obj.category}
             price={obj.price}
-            compact={true} 
+            compact={true}
+            onClick={() => handleImageCardClick(obj)}
           />
         ))}
+      </div>
 
+      <CanvasArea
+        bg={bg}
+        furnitureList={furnitureList}
+        setFurnitureList={setFurnitureList}
+        selectedIndex={selectedIndex}
+        setSelectedIndex={setSelectedIndex}
+      />
 
-      {/* <button title="Move to"><FaArrowsAlt /></button>
-      <button title="Rotate"><FaUndo /></button>
-      <button title="Duplicate"><FaClone /></button>
-      <button title="Remove"><FaTrash /></button> */}
-    </div>
-      <CanvasArea />
-       <div className="TwoDimensionalViewPage-right-sidebar">
-      <h3>Color</h3>
-      {variants.map((variant, i) => (
-        <div
-          key={i}
-          style={{
-            background: variant.color,
-            height: "50px",
-            width: "50px",
-            margin: "10px 0",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-          title={variant.label}
-        />
-      ))}
-      <hr />
-      <button>Swap</button>
-      <button>Goes well with</button>
-      <button>Info</button>
-    </div>
+      <div className="TwoDimensionalViewPage-right-sidebar">
+        <h3 className="Tools-heading">Tools</h3>
+
+        <button onClick={handleSave} className="Tools-button">Save as PNG</button>
+        <button
+          className="Tools-button"
+          onClick={() =>
+            selectedIndex !== null &&
+            updateSelected({
+              scale: Math.min((furnitureList[selectedIndex]?.scale || 0.5) + 0.1, 2),
+            })
+          }
+        >+</button>
+        <button
+          className="Tools-button"
+          onClick={() =>
+            selectedIndex !== null &&
+            updateSelected({
+              scale: Math.max((furnitureList[selectedIndex]?.scale || 0.5) - 0.1, 0.1),
+            })
+          }
+        >-</button>
+
+        <span style={{ marginTop: "10px" }}>Rotate:</span>
+        <button
+          className="Tools-button"
+          onClick={() =>
+            selectedIndex !== null &&
+            updateSelected({
+              rotation: (furnitureList[selectedIndex]?.rotation || 0) + Math.PI / 12,
+            })
+          }
+        >⟲</button>
+        <button
+          className="Tools-button"
+          onClick={() =>
+            selectedIndex !== null &&
+            updateSelected({
+              rotation: (furnitureList[selectedIndex]?.rotation || 0) - Math.PI / 12,
+            })
+          }
+        >⟳</button>
+
+        <button onClick={handleShare} className="Tools-button">Share</button>
+
+        {selectedIndex !== null && (
+          <button
+            style={{ marginTop: "10px", color: "red" }}
+            onClick={() => {
+              if (window.confirm("Do you really want to delete this model?")) {
+                setFurnitureList((prev) => prev.filter((_, i) => i !== selectedIndex));
+                setSelectedIndex(null);
+              }
+            }}
+          >
+            Delete
+          </button>
+        )}
+      </div>
     </div>
   );
 }
