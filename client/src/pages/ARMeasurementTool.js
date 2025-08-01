@@ -30,7 +30,7 @@ const ARMeasurementTool = () => {
     renderer.xr.enabled = true;
     document.body.appendChild(renderer.domElement);
     rendererRef.current = renderer;
-
+// It creates AR button
     const arButton = ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] });
     document.body.appendChild(arButton);
     arButtonRef.current = arButton;
@@ -84,7 +84,7 @@ const ARMeasurementTool = () => {
   const onSelect = () => {
     const reticle = reticleRef.current;
     if (!reticle.visible) return;
-
+//It creates recticle
     const marker = new THREE.Mesh(
       new THREE.SphereGeometry(0.01, 16, 16),
       new THREE.MeshBasicMaterial({ color: 0xffff00 })
@@ -123,6 +123,7 @@ const ARMeasurementTool = () => {
     labelRef.current.textContent = 'Tap two points to measure';
     resetBtnRef.current.style.display = 'none';
   };
+   // render
 
   const render = (timestamp, frame) => {
     const renderer = rendererRef.current;

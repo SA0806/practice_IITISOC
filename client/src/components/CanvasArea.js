@@ -5,6 +5,7 @@ import * as THREE from "three";
 import "./CanvasArea.css";
 import { useGesture } from "@use-gesture/react";
 
+// inserting the backgroung function
 function Background({ image, setSize }) {
   const [localSize, setLocalSize] = useState([1, 1]);
   const [texture, setTexture] = useState(null);
@@ -30,7 +31,7 @@ function Background({ image, setSize }) {
   if (!texture) return null;
 
   return (
-    <mesh position={[0, localSize[1] / 2 - 5.5,-5]}>
+    <mesh position={[0, localSize[1] / 2 - 5.5, -5]}>
       <planeGeometry args={localSize} />
       <meshBasicMaterial map={texture} depthWrite={false} />
     </mesh>
@@ -135,7 +136,7 @@ function Furniture({
   orbitRef,
 }) {
   const { scene } = useGLTF(url);
-//   const groupRef = useRef();
+
 //   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 //   const raycaster = new THREE.Raycaster();
 //   const offset = useRef(new THREE.Vector3());
@@ -242,7 +243,25 @@ function Furniture({
   );
 }
 
-
+const handleShare = () => {
+  const canvas = document.querySelector("canvas");
+  canvas.toBlob(async (blob) => {
+    const file = new File([blob], "room-design.png", { type: "image/png" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "My Room Design",
+          text: "Check out my room design!",
+        });
+      } catch (err) {
+        alert("Sharing cancelled or failed.");
+      }
+    } else {
+      alert("Sharing is not supported on this device/browser. Please download and share manually.");
+    }
+  });
+};
 
 // function RaycastPlane({ width, height, onClick }) {
 //   const { camera, gl } = useThree();
@@ -293,10 +312,10 @@ function RaycastPlane({ width, height, onClick }) {
     <mesh
       ref={planeRef}
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, 0.01, 0]}
+      position={[0, 0.01, -5]}
       receiveShadow
     >
-      <planeGeometry args={[width + 1, height + 1]} />
+      <planeGeometry args={[width, height]} />
       <meshStandardMaterial transparent opacity={0} />
     </mesh>
   );
@@ -308,6 +327,7 @@ export default function CanvasArea({
   setFurnitureList,
   selectedIndex,
   setSelectedIndex,
+  selectedModel
 }) {
 //   const [bgSize] = useState([10, 10]);
 //   const orbitRef = useRef();
@@ -330,15 +350,13 @@ const [bgSize, setBgSize] = useState([10, 10]);
 const handlePlace = (position) => {
     if (selectedIndex !== null) return; // Don't place if something is selected
     if (window.selectedModel) {
-      setFurnitureList((prev) => [
-        ...prev,
-        {
+      const newItem = {
           url: window.selectedModel,
           position: [position.x, 0, position.z],
           scale: 0.5,
           rotation: 0,
-        },
-      ]);
+        };
+      setFurnitureList((prev) => [...prev, newItem]);
       setSelectedIndex(furnitureList.length);
     }
   };
@@ -368,7 +386,13 @@ const handlePlace = (position) => {
       <Canvas
         shadows
         gl={{ preserveDrawingBuffer: true }}
-        camera={{ position: [0, 5, 12], fov: 45, near: 0.1, far: 1000, }}
+        camera={{ position: [0, 5, 12], fov: 45, near: 0.1, far: 1000 }}
+        style={{
+          width: `${bgSize[0] * 107}px`, // scale as needed for display
+          height: `${bgSize[1] * 150}px`, // scale as needed for display
+          background: "#fff",
+        }}
+        onPointerMissed={() => setSelectedIndex(null)}
       >
         <ambientLight intensity={0.7} />
         <directionalLight position={[5, 10, 5]} castShadow />
@@ -387,15 +411,15 @@ const handlePlace = (position) => {
             //   orbitRef={orbitRef}
             // />
             <Furniture
-          key={i}
-          url={item.url}
-          position={item.position}
-          scale={item.scale}
-          rotation={item.rotation}
-          selected={i === selectedIndex}
-          onSelect={() => setSelectedIndex(i)}
-          onUpdate={(updates) => updateSelected(updates)}
-        />
+              key={i}
+              url={item.url}
+              position={item.position}
+              scale={item.scale}
+              rotation={item.rotation}
+              selected={i === selectedIndex}
+              onSelect={() => setSelectedIndex(i)}
+              onUpdate={(updates) => updateSelected(updates)}
+            />
           ))}
 
         <RaycastPlane
@@ -415,3 +439,4 @@ const handlePlace = (position) => {
     </div>
   );
 }
+
