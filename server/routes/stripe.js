@@ -36,8 +36,8 @@ router.post("/create-checkout-session", async (req, res) => {
       metadata: {
   items: cartItems.map(item => `${item.name} x${item.quantity}`).join(', ')
 },
-      success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:3000/cancel",
+      success_url: `${process.env.REACT_APP}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.REACT_APP}/cancel`,
     });
 
     console.log("✅ Checkout session created:", session.id);

@@ -26,8 +26,8 @@ router.post("/", async (req, res) => {
     payment_method_types: ["card"],
     line_items,
     mode: "payment",
-    success_url: "https://practice-iitisoc.vercel.app/success",
-    cancel_url: "https://practice-iitisoc.vercel.app//cancel",
+    success_url: `${process.env.REACT_APP}/success`,
+    cancel_url: `${process.env.REACT_APP}/cancel`,
   });
 
   res.json({ id: session.id });
