@@ -24,7 +24,7 @@ const SuccessPage = () => {
       return;
     }
 
-    fetch(`process.env.REACT_APP_API_URL/api/stripe/verify-payment/${sessionId}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/stripe/verify-payment/${sessionId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.paid) {
