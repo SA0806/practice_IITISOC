@@ -5,6 +5,37 @@ import * as THREE from "three";
 import "./CanvasArea.css";
 import { useGesture } from "@use-gesture/react";
 
+function Background({ image, setSize }) {
+  const [localSize, setLocalSize] = useState([1, 1]);
+  const [texture, setTexture] = useState(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = image;
+
+    img.onload = () => {
+      const aspect = img.width / img.height;
+      const height = 10;
+      const width = height * aspect;
+      setLocalSize([width, height]);
+      setSize([width, height]);
+
+      const tex = new THREE.Texture(img);
+      tex.needsUpdate = true;
+      setTexture(tex);
+    };
+  }, [image, setSize]);
+
+  if (!texture) return null;
+
+  return (
+    <mesh position={[0, localSize[1] / 2 - 5.5,-5]}>
+      <planeGeometry args={localSize} />
+      <meshBasicMaterial map={texture} depthWrite={false} />
+    </mesh>
+  );
+}
 // function Furniture({
 //   url,
 //   position,
@@ -104,14 +135,16 @@ function Furniture({
   orbitRef,
 }) {
   const { scene } = useGLTF(url);
-  const groupRef = useRef();
-  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-  const raycaster = new THREE.Raycaster();
-  const offset = useRef(new THREE.Vector3());
-  const intersection = new THREE.Vector3();
-  const pointer = useRef(new THREE.Vector2());
-  const { camera, gl } = useThree();
-  const [dragging, setDragging] = useState(false);
+//   const groupRef = useRef();
+//   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+//   const raycaster = new THREE.Raycaster();
+//   const offset = useRef(new THREE.Vector3());
+//   const intersection = new THREE.Vector3();
+//   const pointer = useRef(new THREE.Vector2());
+//   const { camera, gl } = useThree();
+//   const [dragging, setDragging] = useState(false);
+//   const [pos, setPos] = useState(position);
+  const meshRef = useRef();
   const [pos, setPos] = useState(position);
 
   const bind = useGesture({
@@ -129,69 +162,80 @@ function Furniture({
   });
 
   useEffect(() => {
-    if (groupRef.current) {
-      groupRef.current.position.set(...position);
-    }
+    setPos(position);
   }, [position]);
 
-  const onPointerDown = (e) => {
-    e.stopPropagation();
-    onSelect();
-    pointer.current.set(
-      (e.clientX / window.innerWidth) * 2 - 1,
-      -(e.clientY / window.innerHeight) * 2 + 1
-    );
 
-    raycaster.setFromCamera(pointer.current, camera);
-    raycaster.ray.intersectPlane(plane, intersection);
-    offset.current.copy(intersection).sub(groupRef.current.position);
+//   useEffect(() => {
+//     if (groupRef.current) {
+//       groupRef.current.position.set(...position);
+//     }
+//   }, [position]);
 
-    orbitRef.current.enabled = false;
-    setDragging(true);
-  };
+//   const onPointerDown = (e) => {
+//     e.stopPropagation();
+//     onSelect();
+//     pointer.current.set(
+//       (e.clientX / window.innerWidth) * 2 - 1,
+//       -(e.clientY / window.innerHeight) * 2 + 1
+//     );
 
-  const onPointerMove = (e) => {
-    if (!dragging) return;
+//     raycaster.setFromCamera(pointer.current, camera);
+//     raycaster.ray.intersectPlane(plane, intersection);
+//     offset.current.copy(intersection).sub(groupRef.current.position);
 
-    pointer.current.set(
-      (e.clientX / window.innerWidth) * 2 - 1,
-      -(e.clientY / window.innerHeight) * 2 + 1
-    );
+//     orbitRef.current.enabled = false;
+//     setDragging(true);
+//   };
 
-    raycaster.setFromCamera(pointer.current, camera);
-    if (raycaster.ray.intersectPlane(plane, intersection)) {
-      groupRef.current.position.copy(intersection.sub(offset.current));
-    }
-  };
+//   const onPointerMove = (e) => {
+//     if (!dragging) return;
 
-  const onPointerUp = () => {
-    if (dragging) {
-      const pos = groupRef.current.position;
-      onUpdate({ position: [pos.x, pos.y, pos.z] });
-      setDragging(false);
-      orbitRef.current.enabled = true;
-    }
-  };
+//     pointer.current.set(
+//       (e.clientX / window.innerWidth) * 2 - 1,
+//       -(e.clientY / window.innerHeight) * 2 + 1
+//     );
 
-  useEffect(() => {
-    gl.domElement.addEventListener("pointermove", onPointerMove);
-    gl.domElement.addEventListener("pointerup", onPointerUp);
+//     raycaster.setFromCamera(pointer.current, camera);
+//     if (raycaster.ray.intersectPlane(plane, intersection)) {
+//       groupRef.current.position.copy(intersection.sub(offset.current));
+//     }
+//   };
 
-    return () => {
-      gl.domElement.removeEventListener("pointermove", onPointerMove);
-      gl.domElement.removeEventListener("pointerup", onPointerUp);
-    };
-  }, [dragging]);
+//   const onPointerUp = () => {
+//     if (dragging) {
+//       const pos = groupRef.current.position;
+//       onUpdate({ position: [pos.x, pos.y, pos.z] });
+//       setDragging(false);
+//       orbitRef.current.enabled = true;
+//     }
+//   };
+
+//   useEffect(() => {
+//     gl.domElement.addEventListener("pointermove", onPointerMove);
+//     gl.domElement.addEventListener("pointerup", onPointerUp);
+
+//     return () => {
+//       gl.domElement.removeEventListener("pointermove", onPointerMove);
+//       gl.domElement.removeEventListener("pointerup", onPointerUp);
+//     };
+//   }, [dragging]);
 
   return (
     <group
       {...bind()}
-      ref={groupRef}
+      ref={meshRef}
+      position={pos}
       scale={[scale, scale, scale]}
       rotation={[0, rotation, 0]}
-      onPointerDown={onPointerDown}
-      onPointerMissed={(e) => e.stopPropagation()}
-      onClick={(e) => e.stopPropagation()}
+    //   onPointerDown={onPointerDown}
+    //   onPointerMissed={(e) => e.stopPropagation()}
+    castShadow
+    //   onClick={(e) => e.stopPropagation()}
+    onClick={(e) => {
+        e.stopPropagation();
+        onSelect && onSelect();
+      }}
     >
       <primitive object={scene} />
     </group>
@@ -200,31 +244,50 @@ function Furniture({
 
 
 
+// function RaycastPlane({ width, height, onClick }) {
+//   const { camera, gl } = useThree();
+//   const planeRef = useRef();
+
+//   useEffect(() => {
+//     const handleClick = (e) => {
+//       if (!planeRef.current) return;
+
+//       const mouse = new THREE.Vector2(
+//         (e.clientX / window.innerWidth) * 2 - 1,
+//         -(e.clientY / window.innerHeight) * 2 + 1
+//       );
+
+//       const raycaster = new THREE.Raycaster();
+//       raycaster.setFromCamera(mouse, camera);
+
+//       const intersects = raycaster.intersectObject(planeRef.current);
+//       if (intersects.length > 0) {
+//         onClick(intersects[0].point);
+//       }
+//     };
+
+//     gl.domElement.addEventListener("click", handleClick);
+//     return () => gl.domElement.removeEventListener("click", handleClick);
+//   }, [camera, gl, onClick]);
+
 function RaycastPlane({ width, height, onClick }) {
   const { camera, gl } = useThree();
   const planeRef = useRef();
 
-  useEffect(() => {
-    const handleClick = (e) => {
+  useFrame(() => {
+    gl.domElement.onclick = (e) => {
       if (!planeRef.current) return;
 
+      const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2(
         (e.clientX / window.innerWidth) * 2 - 1,
         -(e.clientY / window.innerHeight) * 2 + 1
       );
-
-      const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(mouse, camera);
-
       const intersects = raycaster.intersectObject(planeRef.current);
-      if (intersects.length > 0) {
-        onClick(intersects[0].point);
-      }
+      if (intersects.length > 0) onClick(intersects[0].point);
     };
-
-    gl.domElement.addEventListener("click", handleClick);
-    return () => gl.domElement.removeEventListener("click", handleClick);
-  }, [camera, gl, onClick]);
+  });
 
   return (
     <mesh
@@ -233,7 +296,7 @@ function RaycastPlane({ width, height, onClick }) {
       position={[0, 0.01, 0]}
       receiveShadow
     >
-      <planeGeometry args={[width + 5, height + 5]} />
+      <planeGeometry args={[width + 1, height + 1]} />
       <meshStandardMaterial transparent opacity={0} />
     </mesh>
   );
@@ -246,19 +309,36 @@ export default function CanvasArea({
   selectedIndex,
   setSelectedIndex,
 }) {
-  const [bgSize] = useState([10, 10]);
-  const orbitRef = useRef();
+//   const [bgSize] = useState([10, 10]);
+//   const orbitRef = useRef();
+const [bgSize, setBgSize] = useState([10, 10]);
 
-  const handlePlace = (position) => {
-    if (selectedIndex !== null) return;
+//   const handlePlace = (position) => {
+//     if (selectedIndex !== null) return;
+//     if (window.selectedModel) {
+//       const newItem = {
+//         url: window.selectedModel,
+//         position: [position.x, 0, position.z],
+//         scale: 0.5,
+//         rotation: 0,
+//       };
+//       setFurnitureList((prev) => [...prev, newItem]);
+//       setSelectedIndex(furnitureList.length);
+//     }
+//   };
+
+const handlePlace = (position) => {
+    if (selectedIndex !== null) return; // Don't place if something is selected
     if (window.selectedModel) {
-      const newItem = {
-        url: window.selectedModel,
-        position: [position.x, 0, position.z],
-        scale: 0.5,
-        rotation: 0,
-      };
-      setFurnitureList((prev) => [...prev, newItem]);
+      setFurnitureList((prev) => [
+        ...prev,
+        {
+          url: window.selectedModel,
+          position: [position.x, 0, position.z],
+          scale: 0.5,
+          rotation: 0,
+        },
+      ]);
       setSelectedIndex(furnitureList.length);
     }
   };
@@ -288,23 +368,34 @@ export default function CanvasArea({
       <Canvas
         shadows
         gl={{ preserveDrawingBuffer: true }}
-        camera={{ position: [0, 5, 12], fov: 45 }}
+        camera={{ position: [0, 5, 12], fov: 45, near: 0.1, far: 1000, }}
       >
         <ambientLight intensity={0.7} />
         <directionalLight position={[5, 10, 5]} castShadow />
-        <OrbitControls ref={orbitRef} makeDefault />
+        {/* <Background image={bg} setSize={setBgSize} /> */}
+        {/* <OrbitControls ref={orbitRef} makeDefault /> */}
 
         {furnitureList
           .filter((item) => item.url)
           .map((item, i) => (
+            // <Furniture
+            //   key={i}
+            //   {...item}
+            //   selected={i === selectedIndex}
+            //   onSelect={() => setSelectedIndex(i)}
+            //   onUpdate={(updates) => updateSelected(updates)}
+            //   orbitRef={orbitRef}
+            // />
             <Furniture
-              key={i}
-              {...item}
-              selected={i === selectedIndex}
-              onSelect={() => setSelectedIndex(i)}
-              onUpdate={(updates) => updateSelected(updates)}
-              orbitRef={orbitRef}
-            />
+          key={i}
+          url={item.url}
+          position={item.position}
+          scale={item.scale}
+          rotation={item.rotation}
+          selected={i === selectedIndex}
+          onSelect={() => setSelectedIndex(i)}
+          onUpdate={(updates) => updateSelected(updates)}
+        />
           ))}
 
         <RaycastPlane
