@@ -9,7 +9,7 @@ Experience interior designing like never before — right from your browser.
 Try it here: https://practice-iitisoc.vercel.app/
 
 
-## Team SD07
+## Team SD_007
 
 * Team Leader: Sahiba Joshi
 * Team Members: Devanshi Kawlani, Sohil Dangi, Disha Dange
