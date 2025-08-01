@@ -9,7 +9,7 @@ Experience interior designing like never before — right from your browser.
 Try it here: https://practice-iitisoc.vercel.app/
 
 
-## Team SD07
+## Team SD_007
 
 * Team Leader: Sahiba Joshi
 * Team Members: Devanshi Kawlani, Sohil Dangi, Disha Dange
@@ -24,22 +24,18 @@ Developed as part of IITISoC 2025 at IIT Indore.
 ### Core Functionality
 
 * AR Visualization (Live AR View Mode): Place and view 3D objects in real spaces using your mobile camera (powered by Model Viewer and WebXR).
-
 * Object Library: A dashboard with a variety of furniture, decor, and architectural 3D models, sourced from Sketchfab and rendered via Blender.
-
 * Customization Tools: Rotate, drag, zoom in/out objects to fit them into your room layout.
-
 * Room Planner Mode: Upload a room image and drag/drop furniture on it to plan your layout virtually.
 
 ### Camera + AR Integration
 * Markerless AR using live camera feed.
-
 * Real-time scene capture and video recording in AR mode.
 
 ### Responsive UI
 * Seamless experience on both mobile and desktop (AR features available on mobile/tablets).
 
-## Tech Stack
+## Tech-Stacks
 
 | Category         | Tech Used                     |
 |------------------|-------------------------------|
@@ -48,7 +44,7 @@ Developed as part of IITISoC 2025 at IIT Indore.
 | Build Tool       | Create React App              |
 | AR Engine        | Model Viewer, WebXR, Three.js |
 | 3D Models        | Sketchfab, Blender            |
-| Deployment       | Vercel                        |
+| Deployment       | Vercel, Render                |
 | Backend          | Node.js, Express.js           |
 | Database         | MongoDB                       |
 | Authentication   | JWT, bcrypt, Joi              |
@@ -56,17 +52,14 @@ Developed as part of IITISoC 2025 at IIT Indore.
 ## Additional Features
 
 * AR Measurement Tool: Measure room dimensions in real-time using immersive AR with WebXR + Hit Test API.
-
 * E-Commerce Integration: Users can purchase products directly via Stripe-powered secure payment flow.
-
-* Design Export & Sharing: Save and share your designs via image capture or video export.
-
+* Design Export: Save your designs via image capture or video export.
 * Login/Signup: JWT-secured user authentication with hashed passwords and input validation.
 
 ## How to run the project?
 
 * Clone the github repo
 * Open it in any code editor, say VS Code
-* In terminal run the command npm install to install necessary packages
-* Once installation is completed, run the project by npm start command
+* In terminal run the command 'npm install' to install necessary packages for both client and server directories
+* Once installation is completed, run the project by 'npm start' command for client directory and 'nodemon server.js' for server directory
 
