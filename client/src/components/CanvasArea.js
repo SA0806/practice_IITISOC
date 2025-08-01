@@ -375,7 +375,7 @@ const handlePlace = (position) => {
     <div
       className="canvas-wrapper"
       style={{
-        // backgroundImage: `url(${bg})`,
+        backgroundImage: `url(${bg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -390,13 +390,13 @@ const handlePlace = (position) => {
         style={{
           width: `${bgSize[0] * 107}px`, // scale as needed for display
           height: `${bgSize[1] * 150}px`, // scale as needed for display
-          background: "#fff",
+        //   background: "#fff",
         }}
         onPointerMissed={() => setSelectedIndex(null)}
       >
         <ambientLight intensity={0.7} />
         <directionalLight position={[5, 10, 5]} castShadow />
-        <Background image={bg} setSize={setBgSize} />
+        {/* <Background image={bg} setSize={setBgSize} /> */}
         {/* <OrbitControls ref={orbitRef} makeDefault /> */}
 
         {furnitureList

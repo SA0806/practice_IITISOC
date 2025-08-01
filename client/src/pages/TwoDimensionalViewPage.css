@@ -114,13 +114,14 @@
 .Tools-button {
   background: #f6b131;
   border: 1px solid black;
-  padding: 12px 24px;
+  padding: 8px 24px;
   font-size: 18px;
   border-radius: 8px;
   margin-top: 10px;
   font-family: "Lucida Sans", Geneva, Verdana, sans-serif;
   transition: all 0.3s ease;
   margin: 10px;
+  width:90%;
 }
 .Tools-button:hover {
   background-color: brown;
@@ -131,6 +132,7 @@
 @media (max-width: 1300px) {
   .TwoDimensionalViewPage-left-sidebar {
     width: 20vw;
+    overflow-y: auto;
   }
 
   .TwoDimensionalViewPage-right-sidebar {
@@ -157,20 +159,26 @@
   .TwoDimensionalViewPage-left-sidebar,
   .TwoDimensionalViewPage-right-sidebar {
     width: 100%;
-    height: auto;
+    height: 23vh;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    overflow-x: auto;
+    overflow-x: scroll;
+  }
+  .TwoDimensionalViewPage-right-sidebar {
+    height: 25vh;
+    padding: 10px;
   }
 
   .canvas-area {
     height: 60vh;
+    width:100vw;
   }
 
   .Tools-button {
     padding: 8px 16px;
     font-size: 14px;
+    width: 20%
   }
 
   .circle-button {

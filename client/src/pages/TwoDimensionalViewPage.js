@@ -4,6 +4,22 @@ import { FaPlus } from "react-icons/fa";
 import ImageCard from "../components/ImageCard";
 import "./TwoDimensionalViewPage.css";
 import { useSelectedObjects } from "../Context/SelectedObjectsContext";
+import {
+  FaSave,
+  FaShareAlt,
+  FaTrash,
+  FaExpand,
+  FaCompress,
+  FaUndo,
+  FaRedo,
+  FaArrowUp,
+  FaArrowDown,
+  FaArrowLeft,
+  FaArrowRight,
+  FaArrowCircleUp,
+  FaArrowCircleDown
+} from "react-icons/fa";
+
 
 function TwoDimensionalViewPage() {
   const { selectedObjects } = useSelectedObjects();
@@ -147,7 +163,7 @@ const handleShare = () => {
       <div className="TwoDimensionalViewPage-right-sidebar">
         <h3 className="Tools-heading">Tools</h3>
 
-        <button onClick={handleSave} className="Tools-button">Save as PNG</button>
+        {/* <button onClick={handleSave} className="Tools-button"><FaSave style={{ marginRight: 8 }} /> Save as PNG</button> */}
         <button
           className="Tools-button"
           onClick={() =>
@@ -156,7 +172,7 @@ const handleShare = () => {
               scale: Math.min((furnitureList[selectedIndex]?.scale || 0.5) + 0.1, 2),
             })
           }
-        >+</button>
+        ><FaExpand style={{ marginRight: 8 }} /> Zoom In</button>
         <button
           className="Tools-button"
           onClick={() =>
@@ -165,9 +181,9 @@ const handleShare = () => {
               scale: Math.max((furnitureList[selectedIndex]?.scale || 0.5) - 0.1, 0.1),
             })
           }
-        >-</button>
+        ><FaCompress style={{ marginRight: 8 }} /> Zoom Out</button>
 
-        <span style={{ marginTop: "10px" }}>Rotate:</span>
+        {/* <span style={{ marginTop: "10px" }}>Rotate:</span> */}
         <button
           className="Tools-button"
           onClick={() =>
@@ -176,7 +192,7 @@ const handleShare = () => {
               rotation: (furnitureList[selectedIndex]?.rotation || 0) + Math.PI / 12,
             })
           }
-        >⟲</button>
+        > <FaUndo style={{ marginRight: 8 }} /> Rotate</button>
         <button
           className="Tools-button"
           onClick={() =>
@@ -185,9 +201,104 @@ const handleShare = () => {
               rotation: (furnitureList[selectedIndex]?.rotation || 0) - Math.PI / 12,
             })
           }
-        >⟳</button>
+        ><FaRedo style={{ marginRight: 8 }} /> Rotate</button>
 
-        <button onClick={handleShare} className="Tools-button">Share</button>
+
+        {/* ✨ Movement Controls */}
+  {/* <div > */}
+    {/* <span>Move:</span> */}
+    {/* <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginTop: "8px" }}> */}
+      {/* X axis */}
+      <button
+        className="Tools-button"
+        onClick={() =>
+          selectedIndex !== null &&
+          updateSelected({
+            position: [
+              (furnitureList[selectedIndex]?.position?.[0] || 0) - 0.1,
+              furnitureList[selectedIndex]?.position?.[1] || 0,
+              furnitureList[selectedIndex]?.position?.[2] || 0,
+            ],
+          })
+        }
+      ><FaArrowLeft style={{ marginRight: 8 }} />  X</button>
+
+      <button
+        className="Tools-button"
+        onClick={() =>
+          selectedIndex !== null &&
+          updateSelected({
+            position: [
+              (furnitureList[selectedIndex]?.position?.[0] || 0) + 0.1,
+              furnitureList[selectedIndex]?.position?.[1] || 0,
+              furnitureList[selectedIndex]?.position?.[2] || 0,
+            ],
+          })
+        }
+      ><FaArrowRight style={{ marginRight: 8 }} /> X</button>
+
+      {/* Y axis */}
+      <button
+        className="Tools-button"
+        onClick={() =>
+          selectedIndex !== null &&
+          updateSelected({
+            position: [
+              furnitureList[selectedIndex]?.position?.[0] || 0,
+              (furnitureList[selectedIndex]?.position?.[1] || 0) + 0.1,
+              furnitureList[selectedIndex]?.position?.[2] || 0,
+            ],
+          })
+        }
+      ><FaArrowUp style={{ marginRight: 8 }} /> Y</button>
+
+      <button
+        className="Tools-button"
+        onClick={() =>
+          selectedIndex !== null &&
+          updateSelected({
+            position: [
+              furnitureList[selectedIndex]?.position?.[0] || 0,
+              (furnitureList[selectedIndex]?.position?.[1] || 0) - 0.1,
+              furnitureList[selectedIndex]?.position?.[2] || 0,
+            ],
+          })
+        }
+      ><FaArrowDown style={{ marginRight: 8 }} /> Y</button>
+
+      {/* Z axis */}
+      <button
+        className="Tools-button"
+        onClick={() =>
+          selectedIndex !== null &&
+          updateSelected({
+            position: [
+              furnitureList[selectedIndex]?.position?.[0] || 0,
+              furnitureList[selectedIndex]?.position?.[1] || 0,
+              (furnitureList[selectedIndex]?.position?.[2] || 0) + 0.1,
+            ],
+          })
+        }
+      ><FaArrowCircleUp style={{ marginRight: 8 }} /> Z</button>
+
+      <button
+        className="Tools-button"
+        onClick={() =>
+          selectedIndex !== null &&
+          updateSelected({
+            position: [
+              furnitureList[selectedIndex]?.position?.[0] || 0,
+              furnitureList[selectedIndex]?.position?.[1] || 0,
+              (furnitureList[selectedIndex]?.position?.[2] || 0) - 0.1,
+            ],
+          })
+        }
+      ><FaArrowCircleDown style={{ marginRight: 8 }} /> Z</button>
+    {/* </div> */}
+  {/* </div> */}
+
+
+        {/* <button onClick={handleShare} className="Tools-button"><FaShareAlt style={{ marginRight: 8 }} /> Share</button> */}
 
         {selectedIndex !== null && (
           <button
@@ -199,7 +310,7 @@ const handleShare = () => {
               }
             }}
           >
-            Delete
+           <FaTrash style={{ marginRight: 8 }} /> Delete
           </button>
         )}
       </div>
