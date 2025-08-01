@@ -123,6 +123,7 @@ const ARMeasurementTool = () => {
     labelRef.current.textContent = 'Tap two points to measure';
     resetBtnRef.current.style.display = 'none';
   };
+   // render
 
   const render = (timestamp, frame) => {
     const renderer = rendererRef.current;
