@@ -55,11 +55,11 @@ const Homepage = () => {
           <i className="fas fa-cube"></i> AR <span>House</span> Design
         </h1>
         {/* Show username if logged in */}
-        {username && (
+        {/* {username && (
           <div style={{ textAlign: 'right', color: '#f6b131', fontSize: '20px', marginRight: '30px' }}>
             Welcome, {username}!
           </div>
-        )}
+        )} */}
   {/* <nav>
     <ul>
       <li className="navigation">Platform</li>

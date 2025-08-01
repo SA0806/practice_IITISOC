@@ -133,3 +133,8 @@
 .checkout-btn:hover {
   background-color: #292367;
 }
+@media (max-width: 768px) {
+    .cart-panel{
+        width:240px;
+    }
+  }
