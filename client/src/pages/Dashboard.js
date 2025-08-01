@@ -42,7 +42,7 @@ const Dashboard = () => {
       />
 
       {/* AR Button */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <div className="dashboard-button-group"style={{ display: 'flex', gap:'20px', justifyContent: 'center', marginTop: '20px' }}>
         <ARButton selectedObjects={selectedObjects} />
         <TwoDimensionalViewButton selectedObjects={selectedObjects}/>
       </div>

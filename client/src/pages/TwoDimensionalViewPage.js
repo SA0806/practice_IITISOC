@@ -43,11 +43,43 @@ function TwoDimensionalViewPage() {
     );
   };
 
-  const handleShare = () => {
-    if (selectedIndex === null) return;
-    const item = furnitureList[selectedIndex];
-    alert(`Sharing: ${item.name}`);
-  };
+//   const handleShare = () => {
+//     if (selectedIndex === null) return;
+//     const item = furnitureList[selectedIndex];
+//     alert(`Sharing: ${item.name}`);
+//   };
+const handleShare = () => {
+  const canvas = document.querySelector("canvas");
+
+  if (!canvas) {
+    alert("Canvas not found. Please make sure the canvas is rendered.");
+    return;
+  }
+
+  canvas.toBlob(async (blob) => {
+    if (!blob) {
+      alert("Failed to generate image from canvas.");
+      return;
+    }
+
+    const file = new File([blob], "room-design.png", { type: "image/png" });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "My Room Design",
+          text: "Check out my room design!",
+        });
+      } catch (err) {
+        alert("Sharing cancelled or failed.");
+      }
+    } else {
+      alert("Sharing is not supported on this device/browser. Please download and share manually.");
+    }
+  });
+};
+
 
   const handleImageCardClick = (obj) => {
     if (!obj || !obj.model) {

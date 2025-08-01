@@ -137,4 +137,9 @@
     .cart-panel{
         width:240px;
     }
+    .cart-heading{
+  margin-top: 50px;
+  text-align: center;
+
+}
   }

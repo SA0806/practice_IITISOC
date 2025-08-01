@@ -156,3 +156,13 @@
   }
   
 }
+@media (max-width: 768px) {
+  .dashboard-button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:0px !important;
+  }
+ 
+}
+
