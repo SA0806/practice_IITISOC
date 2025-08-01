@@ -14,6 +14,11 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/api/products`);
         const data = await res.json();
 
+        if (!Array.isArray(data)) {
+  console.error("❌ Failed to fetch products: Data is not an array", data);
+  return;
+}
+
         console.log(data);
 
         // Group by category
