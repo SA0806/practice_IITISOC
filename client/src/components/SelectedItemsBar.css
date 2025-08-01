@@ -19,7 +19,8 @@
   max-height: 300px;
   margin-left: auto;
   margin-right: auto;
-  overflow: visible;
+  /* overflow:hidden; */
+  overflow-y: scroll;
  
 }
 
