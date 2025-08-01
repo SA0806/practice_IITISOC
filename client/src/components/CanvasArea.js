@@ -357,7 +357,7 @@ const handlePlace = (position) => {
     <div
       className="canvas-wrapper"
       style={{
-        backgroundImage: `url(${bg})`,
+        // backgroundImage: `url(${bg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -372,7 +372,7 @@ const handlePlace = (position) => {
       >
         <ambientLight intensity={0.7} />
         <directionalLight position={[5, 10, 5]} castShadow />
-        {/* <Background image={bg} setSize={setBgSize} /> */}
+        <Background image={bg} setSize={setBgSize} />
         {/* <OrbitControls ref={orbitRef} makeDefault /> */}
 
         {furnitureList
