@@ -18,7 +18,7 @@ const ARButton = ({ selectedObjects }) => {
 
   return (
     <button className="ar-button" onClick={handleClick}>
-      Visualise in AR
+      AR View Mode
     </button>
   );
 };

@@ -18,7 +18,7 @@ const TwoDimensionalViewButton = ({ selectedObjects }) => {
 
   return (
     <button className="Two-Dimensional-View-button" onClick={handleClick}>
-      2DView
+      Room Planner Mode
     </button>
   );
 };
