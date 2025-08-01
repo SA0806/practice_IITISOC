@@ -5,6 +5,7 @@ import * as THREE from "three";
 import "./CanvasArea.css";
 import { useGesture } from "@use-gesture/react";
 
+// inserting the backgroung function
 function Background({ image, setSize }) {
   const [localSize, setLocalSize] = useState([1, 1]);
   const [texture, setTexture] = useState(null);
