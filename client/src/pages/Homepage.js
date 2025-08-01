@@ -184,7 +184,7 @@ const Homepage = () => {
     <br />
     <br />
   </div>
-  <div>
+  {/* <div>
       <h3>Your Cart:</h3>
       <ul>
         {cart.map((item, idx) => (
@@ -193,7 +193,7 @@ const Homepage = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </div> */}
   <button onClick={scrollToTop} id="scrollTopBtn" title="Go to top">↑</button>
 
 </header>
