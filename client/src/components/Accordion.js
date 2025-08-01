@@ -11,7 +11,7 @@ const Accordion = ({ selectedObjects, toggleObjectSelection }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("https://practice-iitisoc.onrender.com/api/products");
+        const res = await fetch("process.env.REACT_APP_API_URL/api/products");
         const data = await res.json();
 
         console.log(data);
