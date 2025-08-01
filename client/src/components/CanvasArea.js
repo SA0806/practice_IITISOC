@@ -135,7 +135,7 @@ function Furniture({
   orbitRef,
 }) {
   const { scene } = useGLTF(url);
-//   const groupRef = useRef();
+
 //   const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 //   const raycaster = new THREE.Raycaster();
 //   const offset = useRef(new THREE.Vector3());
