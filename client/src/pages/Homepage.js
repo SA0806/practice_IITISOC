@@ -133,6 +133,8 @@ const Homepage = () => {
       src="https://plus.unsplash.com/premium_photo-1661883982941-50af7720a6ff?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8M2QlMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D"
       alt="AR walkthrough"
     />
+
+  // Cards Section//
   </div>
   <div className="H-section-cards">
     <div className="H-card">
