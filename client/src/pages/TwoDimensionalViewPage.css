@@ -94,7 +94,7 @@
 }
 .image-card img{
   /* margin-bottom: 10px; */
-  height:100px;
+  min-height:100px;
 }
 .TwoDimensionalViewPage-right-sidebar {
   width: 17vw;
@@ -128,7 +128,7 @@
   color: #f5f5f5;
   transform: scale(1.05);
 }
-@media (max-width: 1024px) {
+@media (max-width: 1300px) {
   .TwoDimensionalViewPage-left-sidebar {
     width: 20vw;
   }
@@ -161,6 +161,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
+    overflow-x: auto;
   }
 
   .canvas-area {
