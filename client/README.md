@@ -1,70 +1,72 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# AR House Design Web App
 
-## Available Scripts
+“Where Augmented Reality Meets Interior Design”  
+Experience interior designing like never before — right from your browser.
 
-In the project directory, you can run:
+## Demo 
 
-### `npm start`
+Try it here: https://ar-house-app.vercel.app/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Team SD07
 
-### `npm test`
+* Team Leader: Sahiba Joshi
+* Team Members: Devanshi Kawlani, Sohil Dangi, Disha Dange
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project Overview
 
-### `npm run build`
+AR House Design is a full-stack web-based Augmented Reality (AR) application that allows users to visualize and design home interiors or exteriors in real time. It brings 3D furniture and décor to your own space using immersive technologies — no app download required.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Developed as part of IITISoC 2025 at IIT Indore.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Features 
+### Core Functionality
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* AR Visualization (Live AR View Mode): Place and view 3D objects in real spaces using your mobile camera (powered by Model Viewer and WebXR).
 
-### `npm run eject`
+* Object Library: A dashboard with a variety of furniture, decor, and architectural 3D models, sourced from Sketchfab and rendered via Blender.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* Customization Tools: Rotate, drag, zoom in/out objects to fit them into your room layout.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* Room Planner Mode: Upload a room image and drag/drop furniture on it to plan your layout virtually.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Camera + AR Integration
+* Markerless AR using live camera feed.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* Real-time scene capture and video recording in AR mode.
 
-## Learn More
+### Responsive UI
+* Seamless experience on both mobile and desktop (AR features available on mobile/tablets).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Tech Stack
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+| Category         | Tech Used                     |
+|------------------|-------------------------------|
+| Frontend         | React.js, JavaScript, AOS     |
+| Styling          | CSS, Bootstrap                |
+| Build Tool       | Create React App              |
+| AR Engine        | Model Viewer, WebXR, Three.js |
+| 3D Models        | Sketchfab, Blender            |
+| Deployment       | Vercel                        |
+| Backend          | Node.js, Express.js           |
+| Database         | MongoDB                       |
+| Authentication   | JWT, bcrypt, Joi              |
 
-### Code Splitting
+## Additional Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* AR Measurement Tool: Measure room dimensions in real-time using immersive AR with WebXR + Hit Test API.
 
-### Analyzing the Bundle Size
+* E-Commerce Integration: Users can purchase products directly via Stripe-powered secure payment flow.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* Design Export & Sharing: Save and share your designs via image capture or video export.
 
-### Making a Progressive Web App
+* Login/Signup: JWT-secured user authentication with hashed passwords and input validation.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## How to run the project?
 
-### Advanced Configuration
+* Clone the github repo
+* Open it in any code editor, say VS Code
+* In terminal run the command npm install to install necessary packages
+* Once installation is completed, run the project by npm start command
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
