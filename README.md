@@ -6,7 +6,7 @@ Experience interior designing like never before — right from your browser.
 
 ## Demo 
 
-Try it here: https://ar-house-app.vercel.app/
+Try it here: https://practice-iitisoc.vercel.app/
 
 
 ## Team SD07
