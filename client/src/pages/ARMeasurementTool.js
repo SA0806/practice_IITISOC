@@ -106,7 +106,7 @@ const ARMeasurementTool = () => {
 
       resetBtnRef.current.style.display = 'block';
 
-      // ✅ Native alert box
+      //  Native alert box
       alert("✅ Distance measured and updated!");
     }
   };
@@ -151,13 +151,7 @@ const ARMeasurementTool = () => {
     renderer.render(scene, xrCamera);
   };
 
-  // return (
-  //   <>
-  //     <div id="label" ref={labelRef}>Tap two points to measure</div>
-  //     <button id="resetBtn" ref={resetBtnRef} style={{ display: 'none' }}>Reset</button>
-  //   </>
-  // );
-
+ 
 
   return (
   <>

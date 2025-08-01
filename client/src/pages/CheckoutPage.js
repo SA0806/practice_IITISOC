@@ -10,7 +10,6 @@ const CheckoutPage = () => {
   const location = useLocation();
   const buyNowItem = location.state?.item;
 
-  // const itemsToCheckout = buyNowItem ? [buyNowItem] : cartItems;
   const itemsToCheckout = buyNowItem ? [buyNowItem] : cart;
 
   const handleCheckout = async () => {
@@ -34,25 +33,7 @@ const CheckoutPage = () => {
     }
   };
 
-  // return (
-  //   <div>
-  //     <h2>Checkout</h2>
-  //     {itemsToCheckout.length === 0 ? (
-  //       <p>No items to checkout</p>
-  //     ) : (
-  //       <>
-  //         <ul>
-  //           {itemsToCheckout.map((item, index) => (
-  //             <li key={index}>
-  //               {item.name} - ₹{item.price} x {item.quantity}
-  //             </li>
-  //           ))}
-  //         </ul>
-  //         <button onClick={handleCheckout}>Proceed to Payment</button>
-  //       </>
-  //     )}
-  //   </div>
-  // );
+
 
   return (
   <div className="checkout-container">
@@ -61,16 +42,7 @@ const CheckoutPage = () => {
       <p className="empty-message">No items to checkout</p>
     ) : (
       <>
-        {/* <ul className="checkout-items">
-          {itemsToCheckout.map((item, index) => (
-            <li key={index}>
-              <span>{item.name}</span>
-              <span>
-                ₹{item.price} × {item.quantity}
-              </span>
-            </li>
-          ))}
-        </ul> */}
+      
 
         <ul className="checkout-items">
   {itemsToCheckout.map((item, index) => (

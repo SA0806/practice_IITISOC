@@ -255,9 +255,7 @@
   transform: scale(1.05);
 }
 
-/* span {
-  color: rgb(246, 177, 49);
-} */
+
 html {
   scroll-behavior: smooth;
 }
@@ -362,12 +360,7 @@ html {
     margin-bottom: 0px;
   }
 }
-/* .Homepage-login-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-} */
+
 
 .Homepage-login-button {
   display: flex;

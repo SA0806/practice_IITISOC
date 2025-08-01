@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './Dashboard.css';
 import CategoryButton from '../components/CategoryButton';
-import Navbar from '../components/Navbar';
 import Accordion from '../components/Accordion';
 import ImageCard from '../components/ImageCard';
 import { useNavigate } from 'react-router-dom';
