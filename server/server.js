@@ -25,10 +25,7 @@ app.get('/ping', (req, res) => {
 });
 
 // ✅ DB Connections
-const checkoutConnection = mongoose.createConnection(process.env.CHECKOUT_DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const checkoutConnection = mongoose.createConnection(process.env.CHECKOUT_DB_URI);
 checkoutConnection.on('connected', () => {
   console.log('✅ Connected to checkoutDB');
 });
@@ -36,10 +33,7 @@ checkoutConnection.on('error', (err) => {
   console.error('❌ Error connecting to checkoutDB:', err);
 });
 
-const arDesignConnection = mongoose.createConnection(process.env.AR_HOUSE_DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const arDesignConnection = mongoose.createConnection(process.env.AR_HOUSE_DB_URI);
 arDesignConnection.on('connected', () => {
   console.log('✅ Connected to AR_House_Design DB');
 });
@@ -47,10 +41,7 @@ arDesignConnection.on('error', (err) => {
   console.error('❌ Error connecting to AR_House_Design DB:', err);
 });
 
-mongoose.connect(process.env.MONGO_CONN, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
+mongoose.connect(process.env.MONGO_CONN).then(() => {
   console.log('✅ Connected to shared users/auth DB');
 }).catch(err => {
   console.error('❌ Error connecting to shared DB:', err);

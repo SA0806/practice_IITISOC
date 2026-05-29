@@ -65,7 +65,7 @@ function Login() {
               value={loginInfo.email}
             />
           </div >
-          <div className="password-field className='login-input-field'">
+          <div className="password-field login-input-field'">
             <label htmlFor='password' className='login-input-heading'>Password</label>
             <div className="password-wrapper">
               <input
