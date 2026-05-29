@@ -14,8 +14,11 @@ const productSchema = new mongoose.Schema({
 });
 
 // Reuse model per request
+// const getProductModel = (connection) => {
+//   return connection.models.Product || connection.model("Furniture", productSchema, "Furniture");
+// };
 const getProductModel = (connection) => {
-  return connection.models.Product || connection.model("Furniture", productSchema, "Furniture");
+  return connection.models.Furniture || connection.model("Furniture", productSchema, "Furniture");
 };
 
 // GET all products
