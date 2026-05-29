@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
 //   return connection.models.Product || connection.model("Furniture", productSchema, "Furniture");
 // };
 const getProductModel = (connection) => {
-  return connection.models.Furniture || connection.model("Furniture", productSchema, "Furniture");
+  return connection.models.Product || connection.model("Product", productSchema, "Product");
 };
 
 // GET all products
