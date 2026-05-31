@@ -1,24 +1,25 @@
-// src/context/SelectedObjectsContext.js
 import React, { createContext, useContext, useState } from 'react';
+import { syncSaveLayout } from '../utils/userApi';
 
 const SelectedObjectsContext = createContext();
 
 export const SelectedObjectsProvider = ({ children }) => {
   const [selectedObjects, setSelectedObjects] = useState([]);
 
-  const toggleObjectSelection = (object) => {
+  const toggleObjectSelection = async (object) => {
     setSelectedObjects((prev) => {
       const isAlreadySelected = prev.some((item) => item.name === object.name);
-      if (isAlreadySelected) {
-        return prev.filter((item) => item.name !== object.name);
-      } else {
-        return [...prev, object];
-      }
+      const updated = isAlreadySelected
+        ? prev.filter((item) => item.name !== object.name)
+        : [...prev, object];
+
+      syncSaveLayout(updated); // fire and forget
+      return updated;
     });
   };
 
   return (
-    <SelectedObjectsContext.Provider value={{ selectedObjects, toggleObjectSelection }}>
+    <SelectedObjectsContext.Provider value={{ selectedObjects, setSelectedObjects, toggleObjectSelection }}>
       {children}
     </SelectedObjectsContext.Provider>
   );

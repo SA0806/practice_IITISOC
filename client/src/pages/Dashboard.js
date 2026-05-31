@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './Dashboard.css';
-import CategoryButton from '../components/CategoryButton';
 import Accordion from '../components/Accordion';
-import ImageCard from '../components/ImageCard';
 import { useNavigate } from 'react-router-dom';
 import SelectedItemsBar from '../components/SelectedItemsBar';
 import ARButton from '../components/ARButton';
@@ -10,12 +8,15 @@ import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 import CartIcon from '../components/CartIcon';
 import CartPanel from '../components/CartPanel';
 import TwoDimensionalViewButton from '../components/2DView';
+import useUserData from '../hooks/useUserData';
 
 const Dashboard = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
 
   const navigate = useNavigate();
+
+  useUserData(); // ← fetches cart + savedLayout from MongoDB on mount
 
   return (
     <div className="dashboard">

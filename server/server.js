@@ -9,6 +9,7 @@ import productRoutes from './routes/productRoutes.js';
 import AuthRouter from './routes/AuthRouter.js';
 import ProductRouter from './routes/ProductRouter.js';
 import rateLimit from 'express-rate-limit';
+import userRoutes from './routes/userRoutes.js';
 // import CartRouter from './routes/CartRouter.js';
 dotenv.config();
 
@@ -19,6 +20,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({ origin: process.env.REACT_APP, credentials: true }));
 app.use(bodyParser.json());
 app.use(express.json());
+
 
 // Health check
 app.get('/ping', (req, res) => {
@@ -72,6 +74,7 @@ app.use('/api/products', (req, res, next) => {
 // app.use('/auth', AuthRouter);
 app.use('/auth', authLimiter, AuthRouter);
 app.use('/products', ProductRouter);
+app.use('/api/user', userRoutes);
 // app.use('/cart', CartRouter);
 
 // Global error handler

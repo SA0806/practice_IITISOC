@@ -1,30 +1,34 @@
-// ARViewModelViewer.js
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModelViewerAR from '../components/ModelViewerAR';
 import { useSelectedObjects } from '../Context/SelectedObjectsContext';
 import SelectedItemsBar from '../components/SelectedItemsBar';
 import CartIcon from '../components/CartIcon';
 import CartPanel from '../components/CartPanel';
+import { syncSaveArSession } from '../utils/userApi';
 
 const ARViewModelViewer = () => {
   const { selectedObjects, toggleObjectSelection } = useSelectedObjects();
   const [activeModel, setActiveModel] = useState(selectedObjects[0]?.model || null);
-   const [cartOpen, setCartOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+
+  // Save AR session to history when user enters AR view
+  useEffect(() => {
+    if (selectedObjects.length > 0) {
+      syncSaveArSession(selectedObjects);
+    }
+  }, []);
 
   return (
     <div>
-      {/* Top bar to show selected items */}
       <CartIcon onClick={() => setCartOpen((prev) => !prev)} />
       <CartPanel visible={cartOpen} onClose={() => setCartOpen(false)} />
       <div className="top-bar">
-        <SelectedItemsBar 
+        <SelectedItemsBar
           selectedObjects={selectedObjects}
           toggleObjectSelection={toggleObjectSelection}
         />
       </div>
 
-      {/* AR Model Viewer */}
       {activeModel && (
         <model-viewer
           src={activeModel}
@@ -33,15 +37,10 @@ const ARViewModelViewer = () => {
           ar-modes="scene-viewer webxr quick-look"
           auto-rotate
           camera-controls
-          style={{
-            width: '100vw',
-            height: '100vh',
-            background: 'transparent',
-          }}
+          style={{ width: '100vw', height: '100vh', background: 'transparent' }}
         ></model-viewer>
       )}
 
-      {/* Model switcher (from selected list) */}
       <div style={{
         position: 'absolute',
         bottom: '100px',
