@@ -48,44 +48,6 @@ router.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-// 👉 Verify Payment and Save Order
-// router.get("/verify-payment/:sessionId", async (req, res) => {
-//   try {
-//     const session = await stripe.checkout.sessions.retrieve(req.params.sessionId, {
-//       expand: ["line_items", "customer_details"],
-//     });
-
-//     const isPaid = session.payment_status === "paid";
-//     const sessionId = session.id;
-
-//     // Prevent duplicates
-//     const existingOrder = await getOrderModel.findOne({ sessionId });
-
-//     if (!existingOrder && isPaid) {
-//       await getOrderModel.create({
-//         sessionId,
-//         customerEmail: session.customer_details?.email || "unknown",
-//         items: session.line_items.data.map((item) => ({
-//           name: item.description,
-//           quantity: item.quantity,
-//           amount: item.amount_total,
-//         })),
-//         amountTotal: session.amount_total,
-//         paymentStatus: session.payment_status,
-//       });
-
-//       console.log("✅ Order saved to DB");
-//     } else if (existingOrder) {
-//       console.log("ℹ️ Order already exists in DB");
-//     }
-
-//     res.json({ paid: isPaid, session });
-//   } catch (err) {
-//     console.error("❌ Payment Verification Error:", err.message);
-//     res.status(400).json({ error: "Invalid session ID" });
-//   }
-// });
-
 router.get("/verify-payment/:sessionId", async (req, res) => {
   try {
     const Order = getOrderModel(req.checkoutDB); // ✅ Use correct connection
