@@ -35,12 +35,17 @@ function Login() {
         body: JSON.stringify(loginInfo)
       });
       const result = await response.json();
+
+      if (response.status === 429) {
+  handleError(result.error);
+  return;
+}
       const { success, message, jwtToken, name, error } = result;
       if (success) {
         handleSuccess(message);
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('loggedInUser', name);
-        setTimeout(() => navigate('/'), 1000);
+        setTimeout(() => navigate('/Dashboard'), 1000);
       } else {
         const details = error?.details?.[0]?.message || message;
         handleError(details);
@@ -65,7 +70,7 @@ function Login() {
               value={loginInfo.email}
             />
           </div >
-          <div className="password-field login-input-field'">
+          <div className="password-field login-input-field">
             <label htmlFor='password' className='login-input-heading'>Password</label>
             <div className="password-wrapper">
               <input
