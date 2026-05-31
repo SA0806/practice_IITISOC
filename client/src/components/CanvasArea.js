@@ -12,7 +12,7 @@ function Background({ image, setSize }) {
 
   useEffect(() => {
     const img = new Image();
-    img.crossOrigin = "anonymous";
+    img.crossOrigin =   "anonymous";
     img.src = image;
 
     img.onload = () => {
@@ -400,7 +400,7 @@ const handlePlace = (position) => {
         {/* <OrbitControls ref={orbitRef} makeDefault /> */}
 
         {furnitureList
-          .filter((item) => item.url)
+          .filter((item) => item.url || item.model)
           .map((item, i) => (
             // <Furniture
             //   key={i}

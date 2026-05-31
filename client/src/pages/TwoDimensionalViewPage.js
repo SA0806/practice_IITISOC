@@ -25,30 +25,72 @@ function TwoDimensionalViewPage() {
   const { selectedObjects } = useSelectedObjects();
   const [furnitureList, setFurnitureList] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [bgImage, setBgImage] = useState(null);
+  
 
-  const handleUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  // const handleUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
 
-    const imageUrl = URL.createObjectURL(file);
-    const newItem = {
-      name: file.name,
-      image: imageUrl,
-      scale: 1,
-      rotation: 0,
-    };
-    setFurnitureList((prev) => [...prev, newItem]);
+  //   const imageUrl = URL.createObjectURL(file);
+  //   const newItem = {
+  //     name: file.name,
+  //     image: imageUrl,
+  //     scale: 1,
+  //     rotation: 0,
+  //   };
+  //   setFurnitureList((prev) => [...prev, newItem]);
+  // };
+
+  
+
+const handleUpload = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // Convert to base64 so it can be saved/restored
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    setBgImage(event.target.result); // base64 string
   };
+  reader.readAsDataURL(file);
+};
 
-  const handleSave = () => {
-    const canvas = document.querySelector("canvas");
+ 
+
+  const handleSave = async () => {
+  // await syncSave2DLayout(furnitureList, bgImage);
+
+  const threeCanvas = document.querySelector("canvas");
+  if (!threeCanvas) return;
+
+  // Create a composite canvas
+  // This creates a temporary canvas, draws the background image first,
+  // then draws the Three.js canvas on top - giving a composite PNG with both.
+  const composite = document.createElement("canvas");
+  composite.width = threeCanvas.width;
+  composite.height = threeCanvas.height;
+  const ctx = composite.getContext("2d");
+
+  // Draw background image first
+  if (bgImage) {
+    const bg = new Image();
+    bg.src = bgImage;
+    await new Promise((resolve) => { bg.onload = resolve; });
+    ctx.drawImage(bg, 0, 0, composite.width, composite.height);
+  }
+
+  // Draw Three.js canvas on top
+  ctx.drawImage(threeCanvas, 0, 0);
+
+  // Download
+  composite.toBlob((blob) => {
     const link = document.createElement("a");
-    canvas.toBlob((blob) => {
-      link.href = URL.createObjectURL(blob);
-      link.download = "room-design.png";
-      link.click();
-    });
-  };
+    link.href = URL.createObjectURL(blob);
+    link.download = "room-design.png";
+    link.click();
+  });
+};
 
   const updateSelected = (updates) => {
     if (selectedIndex === null) return;
@@ -103,10 +145,15 @@ const handleShare = () => {
       return;
     }
 
+    // Don't add if already on canvas
+  const alreadyAdded = furnitureList.some(item => item.name === obj.name);
+  if (alreadyAdded) return;
+
     window.selectedModel = obj.model;
 
     const newItem = {
       url: obj.model,
+      model: obj.model,
       name: obj.name,
       image: obj.image,
       position: [0, 0, 0],
@@ -118,7 +165,9 @@ const handleShare = () => {
     setSelectedIndex(furnitureList.length);
   };
 
-  const bg = furnitureList[0]?.image || null;
+  
+
+  
 
   return (
     <div className="TwoDimensionalViewPage-container">
@@ -153,7 +202,7 @@ const handleShare = () => {
       </div>
 
       <CanvasArea
-        bg={bg}
+        bg={bgImage}
         furnitureList={furnitureList}
         setFurnitureList={setFurnitureList}
         selectedIndex={selectedIndex}
@@ -163,7 +212,7 @@ const handleShare = () => {
       <div className="TwoDimensionalViewPage-right-sidebar">
         <h3 className="Tools-heading">Tools</h3>
 
-        {/* <button onClick={handleSave} className="Tools-button"><FaSave style={{ marginRight: 8 }} /> Save as PNG</button> */}
+        <button onClick={handleSave} className="Tools-button"><FaSave style={{ marginRight: 8 }} /> Save as PNG</button>
         <button
           className="Tools-button"
           onClick={() =>
@@ -319,4 +368,4 @@ const handleShare = () => {
   );
 }
 
-export default TwoDimensionalViewPage;
+export default TwoDimensionalViewPage; 
