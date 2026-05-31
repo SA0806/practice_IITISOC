@@ -13,12 +13,15 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
+    "cloudinary": "^2.10.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.5.2",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.16.4",
+    "mongodb": "^6.21.0",
+    "mongoose": "^8.24.0",
     "stripe": "^18.3.0"
   }
 }
