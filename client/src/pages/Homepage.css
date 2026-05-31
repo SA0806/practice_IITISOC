@@ -370,3 +370,25 @@ html {
   padding-bottom: 0%;
 }
 
+.homepage-profile-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: "Trebuchet MS", sans-serif;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  margin-right: 10px;
+}
+
+.homepage-profile-btn:hover {
+  background: #f6b131;
+  color: #000;
+  border-color: #f6b131;
+  transform: scale(1.05);
+}

@@ -7,6 +7,7 @@ const API = process.env.REACT_APP_API_URL;
 const useUserData = () => {
   const { setCart } = useCart();
   const { setSelectedObjects } = useSelectedObjects();
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -22,6 +23,10 @@ const useUserData = () => {
 
         if (user.cart?.length > 0) setCart(user.cart);
         if (user.savedLayout?.length > 0) setSelectedObjects(user.savedLayout);
+        if (user.wishlist?.length > 0) {
+  const ids = user.wishlist.map(item => item.productId);
+  localStorage.setItem('wishlist', JSON.stringify(ids));
+}
       } catch (err) {
         console.error('Failed to load user data:', err);
       }
@@ -30,5 +35,6 @@ const useUserData = () => {
     fetchUserData();
   }, []);
 };
+
 
 export default useUserData;

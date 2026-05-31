@@ -15,6 +15,7 @@ import Signup from "./pages/Signup";
 import "react-toastify/dist/ReactToastify.css";
 import TwoDimensionalViewPage from "./pages/TwoDimensionalViewPage";
 import PrivateRoute from "./components/PrivateRoute";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
             path="/Dashboard/TwoDimensionalViewPage"
             element={<TwoDimensionalViewPage />}
           /> */}
-         
+
           <Route
             path="/Dashboard"
             element={<PrivateRoute element={<Dashboard />} />}
@@ -54,6 +55,10 @@ function App() {
           <Route
             path="/checkout"
             element={<PrivateRoute element={<CheckoutPage />} />}
+          />
+          <Route
+            path="/profile"
+            element={<PrivateRoute element={<ProfilePage />} />}
           />
         </Routes>
       </CartProvider>

@@ -1,6 +1,7 @@
 /* src/components/ImageCard.css */
 
 .image-card {
+  position: relative;
   width: 150px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -116,4 +117,37 @@
 
 .buy-now-btn:hover {
   background-color: #893636;
+}
+.image-card {
+  position: relative; /* ← add this to existing .image-card */
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #aaa;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  z-index: 1;
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.15);
+  color: #ff4444;
+}
+
+.wishlist-btn.wishlisted {
+  color: #ff4444;
+  background: rgba(255, 255, 255, 0.95);
 }

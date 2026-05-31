@@ -74,7 +74,10 @@ app.use('/api/products', (req, res, next) => {
 // app.use('/auth', AuthRouter);
 app.use('/auth', authLimiter, AuthRouter);
 app.use('/products', ProductRouter);
-app.use('/api/user', userRoutes);
+app.use('/api/user', (req, res, next) => {
+  req.checkoutDB = checkoutConnection;
+  next();
+}, userRoutes);
 // app.use('/cart', CartRouter);
 
 // Global error handler

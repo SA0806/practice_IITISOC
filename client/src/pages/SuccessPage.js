@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./SuccessPage.css"; // Import the CSS
 import { useNavigate } from 'react-router-dom';
+import { syncClearCart } from '../utils/userApi';
+import { useCart } from '../Context/CartContext';
 
 const SuccessPage = () => {
+
+  
    const navigate = useNavigate();
   const [isPaid, setIsPaid] = useState(null);
   const [sessionDetails, setSessionDetails] = useState(null);
   const [error, setError] = useState("");
+  const { clearCart } = useCart();
 
    const handleGoBack = () => {
     navigate('/dashboard'); // Update this route as per your app
@@ -30,6 +35,8 @@ const SuccessPage = () => {
         if (data?.paid) {
           setIsPaid(true);
           setSessionDetails(data.session);
+          clearCart();        //clears local cart state
+    syncClearCart();    //clears cart in MongoDB
         } else {
           setIsPaid(false);
           setError("Payment not completed or session invalid.");

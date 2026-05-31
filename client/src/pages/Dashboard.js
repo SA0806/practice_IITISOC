@@ -9,6 +9,7 @@ import CartIcon from '../components/CartIcon';
 import CartPanel from '../components/CartPanel';
 import TwoDimensionalViewButton from '../components/2DView';
 import useUserData from '../hooks/useUserData';
+import { FaUserCircle } from 'react-icons/fa';
 
 const Dashboard = () => {
   const [cartOpen, setCartOpen] = useState(false);
@@ -21,7 +22,13 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       {/* Cart functionality */}
-      <CartIcon onClick={() => setCartOpen((prev) => !prev)} />
+      {/* <div className="dashboard-top-bar"> */}
+  <CartIcon onClick={() => setCartOpen((prev) => !prev)} />
+  {/* <button className="profile-icon-btn" onClick={() => navigate('/profile')}> */}
+    {/* <FaUserCircle />
+  </button> */}
+{/* </div> */}
+      {/* <CartIcon onClick={() => setCartOpen((prev) => !prev)} /> */}
       <CartPanel visible={cartOpen} onClose={() => setCartOpen(false)} />
 
       {/* Section Title */}

@@ -1,6 +1,7 @@
 import express from 'express';
 import UserModel from '../models/User.js';
 import ensureAuthenticated from '../middlewares/Auth.js';
+import getOrderModel from '../models/Order.js';
 
 const router = express.Router();
 
@@ -110,5 +111,18 @@ router.post('/ar-history', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// GET order history by email
+router.get('/orders', ensureAuthenticated, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user._id).select('email');
+    const Order = getOrderModel(req.checkoutDB);
+    const orders = await Order.find({ customerEmail: user.email }).sort({ _id: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 export default router;

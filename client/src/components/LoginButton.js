@@ -1,15 +1,19 @@
 import React from 'react';
 import './LoginButton.css';
 import { useNavigate } from "react-router-dom";
+import { useCart } from '../Context/CartContext';
 
 const LoginButton = () => {
   const navigate = useNavigate();
+  const { clearCart } = useCart();
   const isLoggedIn = !!localStorage.getItem('token');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('loggedInUser');
-    window.location.reload();
+    localStorage.removeItem('wishlist');
+    clearCart();
+    navigate('/');
   };
 
   return isLoggedIn ? (
