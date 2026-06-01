@@ -10,7 +10,7 @@ A full-stack web application for visualizing and purchasing home furnishings usi
 
 ## What it does
 
-Users browse furniture, décor, and architectural elements, preview them in AR on their phone, arrange them in a 3D room planner, and purchase directly - with their cart, wishlist, and room layouts saved across sessions and devices.
+Users browse furniture, decor and architectural elements, preview them in AR on their phone, arrange them in a 3D room planner and purchase directly - with their cart, wishlist and room layouts saved across sessions and devices.
 
 ---
 
@@ -47,7 +47,7 @@ Users browse furniture, décor, and architectural elements, preview them in AR o
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 
 - Cloudinary - product images (64 products migrated from local assets)
-- jsDelivr CDN via GitHub - 3D model files (.glb), optimized from ~1.96 GB to ~566 MB
+- jsDelivr CDN via GitHub - 3D model files (.glb), optimized from ~1.96 GB (in local storage) to ~566 MB
 - MongoDB Atlas - user data, orders, product catalogue
 
 ---
@@ -55,13 +55,13 @@ Users browse furniture, décor, and architectural elements, preview them in AR o
 ## Features
 
 **AR & 3D Viewing**
-- View furniture and décor as 3D models in Augmented Reality on mobile (WebXR / scene-viewer / quick-look)
-- 2D room planner with drag, rotate, scale, and move controls on a Three.js canvas
+- View furniture and decor as 3D models in Augmented Reality on mobile (WebXR / scene-viewer / quick-look)
+- 2D room planner with drag, rotate, scale and move controls on a Three.js canvas
 - Export room design as a composite PNG (background + 3D models merged)
 - AR session history saved per user
 
 **E-commerce**
-- Browse 64 products across Furniture, Décor, and Architecture categories
+- Browse 64 products across Furniture, Decor and Architecture categories
 - Add to cart with persistent quantity tracking across devices
 - Wishlist with heart toggle on each product card
 - Stripe Checkout integration with payment verification
@@ -260,7 +260,7 @@ App runs at `http://localhost:3000`
 
 ## Key Design Decisions
 
-**Three separate MongoDB databases** - Products, orders, and user data are intentionally separated so each can be scaled, backed up, or replaced independently without affecting the others.
+**Three separate MongoDB databases** - Products, orders and user data are intentionally separated so each can be scaled, backed up or replaced independently without affecting the others.
 
 **jsDelivr for 3D models** - GLB files (optimized from ~1.96 GB to ~566 MB using `@gltf-transform/cli`) are served via jsDelivr CDN backed by GitHub, giving global CDN distribution at zero cost. Cloudinary was evaluated but rejected due to its 10 MB raw file limit.
 
